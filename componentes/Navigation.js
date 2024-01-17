@@ -11,6 +11,8 @@ import Herramientas from './Herramientas';
 import TablaAmortizacion from './Anexos/TablaPrestamo';
 import Home from './Home';
 import DiasJubilacion from './Anexos/DiasJubilacion';
+import PoliticaPrivacidad from './Anexos/PoliticaPrivacidad';
+import DescargoResponsabilidad from './Anexos/DescargoResponsabilidad';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,8 @@ export function HerramientasStack(){
         <Stack.Screen name="Acciones" component={RentabilidadAcciones}options={{ headerShown: false }} />
         <Stack.Screen name="Tabla" component={TablaAmortizacion}options={{ headerShown: false }} />
         <Stack.Screen name="DiasJubilacion" component={DiasJubilacion}options={{ headerShown: false }} />
+        <Stack.Screen name="DescargoResponsabilidad" component={DescargoResponsabilidad}options={{ headerShown: false }} />
+        <Stack.Screen name="PoliticaPrivacidad" component={PoliticaPrivacidad}options={{ headerShown: false }} />
         
         
       </Stack.Navigator>
