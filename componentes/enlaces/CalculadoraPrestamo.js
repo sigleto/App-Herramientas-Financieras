@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button,StyleSheet,TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 
@@ -8,25 +8,32 @@ export default function CalculadoraPrestamos() {
   const [tasaInteres, setTasaInteres] = useState("");
   const [periodo, setPeriodo] = useState("");
   const [cuota, setCuota] = useState("");
+  const [totalIntereses, setTotalIntereses] = useState("");
+  const [totalPagado, setTotalPagado] = useState("");
 
-  const navigation=useNavigation()
+  const navigation = useNavigation();
 
   const AccesoTabla = () => {
     const data = [];
     const capitalFloat = parseFloat(capital);
     const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12;
     const periodoFloat = parseFloat(periodo);
-  
+
     let saldoPendiente = capitalFloat;
-  
+    let totalInteresesPagados = 0;
+    let totalPagado = 0;
+
     for (let i = 1; i <= periodoFloat; i++) {
       const cuotaCalculada =
         (capitalFloat * tasaInteresFloat) /
         (1 - Math.pow(1 + tasaInteresFloat, -periodoFloat));
-  
+
       const interes = saldoPendiente * tasaInteresFloat;
       const amortizacion = cuotaCalculada - interes;
-  
+
+      totalInteresesPagados += interes;
+      totalPagado += cuotaCalculada;
+
       data.push({
         periodo: i,
         cuota: cuotaCalculada.toFixed(2),
@@ -34,26 +41,34 @@ export default function CalculadoraPrestamos() {
         amortizacion: amortizacion.toFixed(2),
         saldoPendiente: saldoPendiente.toFixed(2),
       });
-  
+
       saldoPendiente -= amortizacion;
     }
-  
+
+    setTotalIntereses(totalInteresesPagados.toFixed(2));
+    setTotalPagado(totalPagado.toFixed(2));
+
     navigation.navigate("Tabla", { data });
   };
-  
 
   const calcularCuota = () => {
     const capitalFloat = parseFloat(capital);
-    const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12; // Tasa de interés mensual
+    const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12;
     const periodoFloat = parseFloat(periodo);
-
+  
     const cuotaCalculada =
       (capitalFloat * tasaInteresFloat) /
       (1 - Math.pow(1 + tasaInteresFloat, -periodoFloat));
-
+  
     setCuota(cuotaCalculada.toFixed(2).toString());
+  
+    // Corregir el cálculo del total pagado
+    const totalInteresesPagados = cuotaCalculada * periodoFloat - capitalFloat;
+    const totalPagado = (cuotaCalculada * periodoFloat - capitalFloat)+ parseFloat(capital);
+  
+    setTotalIntereses(totalInteresesPagados.toFixed(2));
+    setTotalPagado(totalPagado.toFixed(2));
   };
-
   return (
     <View style={styles.container}>
     <Text style={styles.label}>Capital</Text>
@@ -61,7 +76,7 @@ export default function CalculadoraPrestamos() {
       keyboardType="numeric"
       value={capital}
       onChangeText={(text) => setCapital(text)}
-      inputStyle={{ fontSize: 20,color:'olive' }}
+      inputStyle={{ fontSize: 20,color:'olive'}}
       style={styles.input}
       placeholder="Introduce la cantidad a solicitar"
       autoFocus={true}
@@ -89,9 +104,11 @@ export default function CalculadoraPrestamos() {
         <Text style={styles.buttonText}>Calcular Cuota</Text>
       </TouchableOpacity>
       {cuota !== "" && (
-        <Text style={styles.resultText}>
-          Cuota Mensual: {cuota}
-        </Text>
+        <View>
+          <Text style={styles.resultText}>Cuota Mensual: {cuota}</Text>
+          <Text style={styles.resultText}>Total Pagado de intereses: {totalIntereses}</Text>
+          <Text style={styles.resultText}>Total Pagado al final: {totalPagado}</Text>
+        </View>
       )}
       <TouchableOpacity onPress={AccesoTabla} style={styles.touchableButton}>
         <Text style={styles.buttonText}>Consultar Tabla</Text>
@@ -110,6 +127,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 18,
+    textAlign:'center',
+    fontWeight:'bold',
     
   },
   touchableButton: {
