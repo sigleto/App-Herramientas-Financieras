@@ -14,7 +14,7 @@ export default function RentabilidadAcciones() {
   const calcularRentabilidad = async () => {
     try {
       const response = await axios.get(
-        `http://api.marketstack.com/v1/tickers/${symbol}/eod/latest?access_key=${MARKETSTACK_API_ACCESS_KEY}`
+        `http://api.marketstack.com/v1/tickers/${symbol}/eod/latest?access_key=${MARKETSTACK_API_ACCESS_KEY}&exchange=MADRID`
       );
 
       if (response.data) {
