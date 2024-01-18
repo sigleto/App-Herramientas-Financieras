@@ -43,7 +43,7 @@ const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
         fontSize={20}       // Ajusta el tamaño de la fuente
       />
 
-      <Text style={styles.label}>Monto actual</Text>
+      <Text style={styles.label}>Ahorros actuales</Text>
       <TextInput
         style={styles.input}
         placeholder="Monto actual"
@@ -83,12 +83,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     backgroundColor: '#fffbde',
+    
+    
   },
   input: {
     marginBottom: 18,
     borderWidth: 1,
     borderColor: '#888',
-    padding: 8,
+    padding: 6,
     width: '80%',
   },
   resultText: {
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: "bold",
     fontSize: 20,
-    marginTop: 10,
+   
   },
   
   touchableButton: {

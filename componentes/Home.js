@@ -1,20 +1,24 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  } from "react-native";
+import {View,Text, Image,TouchableOpacity,StyleSheet} from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 const Home = () => {
   const navigation = useNavigation();
 
+  const openMenu = () => {
+    navigation.openDrawer(); // Step 3
+  }
 const AccesoHerramientas=()=>{navigation.navigate('Herramientas')}
 
   return (
     <View style={styles.container}>
+       <MaterialCommunityIcons 
+        name="menu"
+        size={30}
+        style={styles.menuIcon}
+        onPress={openMenu} // Step 2
+      />
       <View style={styles.imagenes}>
         <Image style={styles.logo} source={require("../assets/LogoJuan.png")} />
         </View>
@@ -60,7 +64,13 @@ const styles = StyleSheet.create({
   color:'white',
   paddingHorizontal:30,
   paddingVertical:10,
- }
+ }, menuIcon: {
+  position: 'absolute',
+  top: 40,
+  left: 20,
+  fontSize:40,
+  zIndex: 1,
+},
 });
 
 export default Home;

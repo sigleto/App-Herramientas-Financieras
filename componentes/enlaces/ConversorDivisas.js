@@ -1,9 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity,StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
+import { Picker } from '@react-native-picker/picker';
 
 const API_KEY = 'fca_live_4oa9jAhENdCzrJc1zKOdx5IbSuX6n7EGCS7vfw9z'; // Reemplaza con tu clave de API de Free Currency API
-
+const monedas = [
+  { codigo: 'USD', nombre: 'Dólar estadounidense' },
+  { codigo: 'EUR', nombre: 'Euro' },
+  { codigo: 'AUD', nombre: 'Dólar australiano' },
+  { codigo: 'BGN', nombre: 'Lev búlgaro' },
+  { codigo: 'BRL', nombre: 'Real brasileño' },
+  { codigo: 'CAD', nombre: 'Dólar canadiense' },
+  { codigo: 'CHF', nombre: 'Franco suizo' },
+  { codigo: 'CNY', nombre: 'Yuan chino' },
+  { codigo: 'CZK', nombre: 'Corona checa' },
+  { codigo: 'DKK', nombre: 'Corona danesa' },
+  { codigo: 'GBP', nombre: 'Libra esterlina' },
+  { codigo: 'HKD', nombre: 'Dólar de Hong Kong' },
+  { codigo: 'HRK', nombre: 'Kuna croata' },
+  { codigo: 'HUF', nombre: 'Florín húngaro' },
+  { codigo: 'IDR', nombre: 'Rupia indonesia' },
+  { codigo: 'ILS', nombre: 'Nuevo séquel israelí' },
+  { codigo: 'INR', nombre: 'Rupia india' },
+  { codigo: 'ISK', nombre: 'Corona islandesa' },
+  { codigo: 'JPY', nombre: 'Yen japonés' },
+  { codigo: 'KRW', nombre: 'Won surcoreano' },
+  { codigo: 'MXN', nombre: 'Peso mexicano' },
+  { codigo: 'MYR', nombre: 'Ringgit malasio' },
+  { codigo: 'NOK', nombre: 'Corona noruega' },
+  { codigo: 'NZD', nombre: 'Dólar neozelandés' },
+  { codigo: 'PHP', nombre: 'Peso filipino' },
+  { codigo: 'PLN', nombre: 'Złoty polaco' },
+  { codigo: 'RON', nombre: 'Leu rumano' },
+  { codigo: 'RUB', nombre: 'Rublo ruso' },
+  { codigo: 'SEK', nombre: 'Corona sueca' },
+  { codigo: 'SGD', nombre: 'Dólar singapurense' },
+  { codigo: 'THB', nombre: 'Baht tailandés' },
+  { codigo: 'TRY', nombre: 'Lira turca' },
+  { codigo: 'ZAR', nombre: 'Rand sudafricano' },
+];
 export default function ConversorDivisas() {
   const [cantidad, setCantidad] = useState('');
   const [monedaOrigen, setMonedaOrigen] = useState('USD');
@@ -40,33 +75,46 @@ export default function ConversorDivisas() {
     setResultado(resultadoCalculado.toFixed(2).toString());
   };
 
+  
   return (
     <View style={styles.container}>
+      {/* Cantidad a convertir */}
       <Text style={styles.label}>Cantidad a convertir</Text>
       <Input
-       
         keyboardType="numeric"
         value={cantidad}
         onChangeText={(text) => setCantidad(text)}
-        inputStyle={{ fontSize: 20,color:'olive' }}
+        inputStyle={{ fontSize: 20, color: 'olive' }}
         style={styles.input}
         autoFocus={true}
       />
+
+      {/* Moneda de origen */}
       <Text style={styles.label}>Moneda de origen</Text>
-      <Input
-        inputStyle={{ fontSize: 20,color:'olive' }}
-        style={styles.input}
-        value={monedaOrigen}
-        onChangeText={(text) => setMonedaOrigen(text.toUpperCase())}
-      />
+      <Picker
+      style={{ height: 50, width: 200 }}
+        selectedValue={monedaOrigen}
+        onValueChange={(itemValue) => setMonedaOrigen(itemValue)}
+      >
+        {monedas.map((moneda) => (
+          <Picker.Item key={moneda.codigo} label={moneda.nombre} value={moneda.codigo} />
+        ))}
+      </Picker>
+
+      {/* Moneda de destino */}
       <Text style={styles.label}>Moneda de destino</Text>
-      <Input
-        inputStyle={{ fontSize: 20,color:'olive' }}
-        style={styles.input}
-        value={monedaDestino}
-        onChangeText={(text) => setMonedaDestino(text.toUpperCase())}
-      />
-         <TouchableOpacity onPress={obtenerTipoCambio} style={styles.touchableButton}>
+      <Picker
+        style={{ height: 50, width: 200 }}
+        selectedValue={monedaDestino}
+        onValueChange={(itemValue) => setMonedaDestino(itemValue)}
+      >
+        {monedas.map((moneda) => (
+          <Picker.Item key={moneda.codigo} label={moneda.nombre} value={moneda.codigo} />
+        ))}
+      </Picker>
+
+      {/* Obtener Tipo de Cambio */}
+      <TouchableOpacity onPress={obtenerTipoCambio} style={styles.touchableButton}>
         <Text style={styles.buttonText}>Obtener Tipo de Cambio</Text>
       </TouchableOpacity>
 
@@ -80,6 +128,7 @@ export default function ConversorDivisas() {
       <TouchableOpacity onPress={convertirDivisas} style={styles.touchableButton}>
         <Text style={styles.buttonText}>Convertir</Text>
       </TouchableOpacity>
+
       {resultado !== '' && (
         <Text style={styles.resultText}>
           Resultado: {resultado} {monedaDestino}
@@ -88,6 +137,7 @@ export default function ConversorDivisas() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

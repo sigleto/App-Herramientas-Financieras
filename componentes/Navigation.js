@@ -1,6 +1,8 @@
+
+import 'react-native-gesture-handler';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 
 import CalculadoraAhorros from './enlaces/CalculadoraAhorros';
 import RentabilidadAcciones from './enlaces/RentabilidadAcciones';
@@ -20,8 +22,8 @@ export function HerramientasStack(){
   return (
     
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home}options={{ headerShown: false }} />
-        <Stack.Screen name="Herramientas" component={Herramientas}options={{ headerShown: false }} />
+        
+        <Stack.Screen name="HerramientasStack" component={Herramientas}options={{ headerShown: false }} />
         <Stack.Screen name="Prestamo" component={CalculadoraPrestamos}options={{ headerShown: false }} />
         <Stack.Screen name="Ahorros" component={CalculadoraAhorros}options={{ headerShown: false }} />
         <Stack.Screen name="Divisa" component={ConversorDivisas}options={{ headerShown: false }} />
@@ -29,11 +31,42 @@ export function HerramientasStack(){
         <Stack.Screen name="Acciones" component={RentabilidadAcciones}options={{ headerShown: false }} />
         <Stack.Screen name="Tabla" component={TablaAmortizacion}options={{ headerShown: false }} />
         <Stack.Screen name="DiasJubilacion" component={DiasJubilacion}options={{ headerShown: false }} />
-        <Stack.Screen name="DescargoResponsabilidad" component={DescargoResponsabilidad}options={{ headerShown: false }} />
         <Stack.Screen name="PoliticaPrivacidad" component={PoliticaPrivacidad}options={{ headerShown: false }} />
+        <Stack.Screen name="DescargoResponsabilidad" component={DescargoResponsabilidad}options={{ headerShown: false }} />
+        
         
         
       </Stack.Navigator>
     
+  );
+};
+
+export function PrincipalStack(){
+  return (
+   
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{  headerShown: false}}
+        />
+        <Stack.Screen
+          name="Herramientas"
+          component={HerramientasStack}
+          options={{  headerShown: false }}
+        />
+       
+        <Stack.Screen
+          name="Descargo"
+          component={DescargoResponsabilidad}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Politica"
+          component={PoliticaPrivacidad}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+   
   );
 };
