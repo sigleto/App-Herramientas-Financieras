@@ -17,6 +17,7 @@ export default function App() {
   };
 
   const navigation=useNavigation()
+
 const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
 
   return (
@@ -69,6 +70,8 @@ const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
         <Text style={styles.buttonText}>Calcular</Text>
       </TouchableOpacity>
       {resultado && <Text style={styles.resultText}>{resultado}</Text>}
+
+    
 <TouchableOpacity onPress={DiasJubilacion} style={styles.touchableButton}>
    <Text style={styles.buttonText}>Tiempo hasta la jubilación</Text>
 </TouchableOpacity>

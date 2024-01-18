@@ -16,6 +16,7 @@ import DiasJubilacion from './Anexos/DiasJubilacion';
 import PoliticaPrivacidad from './Anexos/PoliticaPrivacidad';
 import DescargoResponsabilidad from './Anexos/DescargoResponsabilidad';
 
+
 const Stack = createStackNavigator();
 
 export function HerramientasStack(){

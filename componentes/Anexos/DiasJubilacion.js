@@ -3,16 +3,18 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 
 export default function App() {
   const [birthDate, setBirthDate] = useState('');
-  const [retirementAge, setRetirementAge] = useState('');
+  const [retirementAge, setRetirementAge] = useState({
+    years: '',
+    months: '',
+  });
   const [timeRemaining, setTimeRemaining] = useState({
     years: null,
     months: null,
     days: null,
   });
-
   const calculateTimeRemaining = () => {
     // Validar que se hayan ingresado ambas fechas
-    if (!birthDate || !retirementAge) {
+    if (!birthDate || (!retirementAge.years && !retirementAge.months)) {
       alert('Por favor, ingresa la fecha de nacimiento y la edad de jubilación.');
       return;
     }
@@ -23,12 +25,14 @@ export default function App() {
     // Parsear la fecha de nacimiento y la edad de jubilación
     const [day, month, year] = birthDate.split('-').map((part) => parseInt(part, 10));
     const birthDateObj = new Date(year, month - 1, day); // Restamos 1 al mes porque en JavaScript los meses van de 0 a 11
-    const retirementAgeNumber = parseInt(retirementAge, 10);
+
+    const retirementYears = parseInt(retirementAge.years, 10) || 0;
+    const retirementMonths = parseInt(retirementAge.months, 10) || 0;
 
     // Calcular la fecha de jubilación
     const retirementDate = new Date(
-      birthDateObj.getFullYear() + retirementAgeNumber,
-      birthDateObj.getMonth(),
+      birthDateObj.getFullYear() + retirementYears,
+      birthDateObj.getMonth() + retirementMonths,
       birthDateObj.getDate()
     );
 
@@ -55,31 +59,44 @@ export default function App() {
         placeholder="DD-MM-YYYY"
         value={birthDate}
         onChangeText={(text) => {
-            // Formatear el texto a DD-MM-YYYY
-            if (text.length === 2 || text.length === 5) {
-              // Agregar las barras automáticamente al ingresar el día y el mes
-              text += '-';
-            }
-            setBirthDate(text);
-          }}
-        textAlign="center"  // Centra el texto
-        fontSize={20}       // Ajusta el tamaño de la fuent
-        height= {50}
+          // Formatear el texto a DD-MM-YYYY
+          if (text.length === 2 || text.length === 5) {
+            // Agregar las barras automáticamente al ingresar el día y el mes
+            text += '-';
+          }
+          setBirthDate(text);
+        }}
+        textAlign="center"
+        fontSize={20}
+        height={50}
         fontWeight='bold'
       />
 
       <Text style={styles.label}>Edad de Jubilación:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Edad"
-        keyboardType="numeric"
-        value={retirementAge}
-        onChangeText={(text) => setRetirementAge(text)}
-        textAlign="center"  // Centra el texto
-        fontSize={20}       // Ajusta el tamaño de la fuent
-        height={50}
-        fontWeight='bold'
-      />
+      <View style={styles.ageInputContainer}>
+        <TextInput
+          style={styles.ageInput}
+          placeholder="Años"
+          keyboardType="numeric"
+          value={retirementAge.years}
+          onChangeText={(text) => setRetirementAge({ ...retirementAge, years: text })}
+          textAlign="center"
+          fontSize={20}
+          height={50}
+          fontWeight='bold'
+        />
+        <TextInput
+          style={styles.ageInput}
+          placeholder="Meses"
+          keyboardType="numeric"
+          value={retirementAge.months}
+          onChangeText={(text) => setRetirementAge({ ...retirementAge, months: text })}
+          textAlign="center"
+          fontSize={20}
+          height={50}
+          fontWeight='bold'
+        />
+      </View>
 
       <TouchableOpacity style={styles.touchableButton} onPress={calculateTimeRemaining}>
         <Text style={styles.buttonText}>Calcular</Text>
@@ -98,7 +115,6 @@ export default function App() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -120,20 +136,29 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 10,
   },
-  result: {
-    marginTop: 20,
-    fontSize: 18,
-    fontWeight: 'bold',
+  ageInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    marginBottom: 15,
+  },
+  ageInput: {
+    flex: 1,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginRight: 5,
+    padding: 10,
   },
   touchableButton: {
     marginVertical: 10,
-    backgroundColor:'#555ff7',
-    paddingHorizontal:27,
-    marginTop:20,  
+    backgroundColor: '#555ff7',
+    paddingHorizontal: 27,
+    marginTop: 20,
   },
-  buttonText:{
-    fontSize:22,
-    color:'#f4f8f8'
+  buttonText: {
+    fontSize: 22,
+    color: '#f4f8f8'
   },
   resultText: {
     marginTop: 20,
@@ -142,4 +167,3 @@ const styles = StyleSheet.create({
     color: "#36c23a",
   },
 });
-
