@@ -3,11 +3,14 @@ import { View, Text, TextInput, TouchableOpacity,StyleSheet } from 'react-native
 import { Input } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 
-const API_KEY = 'fca_live_4oa9jAhENdCzrJc1zKOdx5IbSuX6n7EGCS7vfw9z'; // Reemplaza con tu clave de API de Free Currency API
+const API_KEY = 'd93ad7934d4b03cf5de6577a'; // Reemplaza con tu clave de API de Free Currency API
 const monedas = [
   { codigo: 'USD', nombre: 'Dólar estadounidense' },
   { codigo: 'EUR', nombre: 'Euro' },
   { codigo: 'AUD', nombre: 'Dólar australiano' },
+  { codigo: 'ARS', nombre: 'Peso argentino' },
+  { codigo: 'UYU', nombre: 'Peso uruguayo' },
+  { codigo: 'CLP', nombre: 'Peso chileno' },
   { codigo: 'BGN', nombre: 'Lev búlgaro' },
   { codigo: 'BRL', nombre: 'Real brasileño' },
   { codigo: 'CAD', nombre: 'Dólar canadiense' },
@@ -50,7 +53,7 @@ export default function ConversorDivisas() {
   const obtenerTipoCambio = async () => {
     try {
       const response = await fetch(
-        `https://api.freecurrencyapi.com/v1/latest?apikey=${API_KEY}&base_currency=${monedaOrigen}`
+        `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${monedaOrigen}`
       );
       const data = await response.json();
       console.log('Código de Estado:', response.status);
@@ -58,7 +61,7 @@ export default function ConversorDivisas() {
         
       if (response.ok) {
         console.log (data)
-        const tasaCambio = data.data[monedaDestino]
+        const tasaCambio = data.conversion_rates[monedaDestino]
         console.log (tasaCambio)
         setTipoCambio(tasaCambio.toFixed(4).toString());
       } else {
@@ -148,6 +151,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 18,
+    textAlign:'center',
+    fontSize:26
     
   },
   touchableButton: {
