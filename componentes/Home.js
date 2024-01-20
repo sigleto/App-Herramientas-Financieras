@@ -21,12 +21,15 @@ const AccesoHerramientas=()=>{navigation.navigate('Herramientas')}
       />
       <View style={styles.imagenes}>
         <Image style={styles.logo} source={require("../assets/LogoJuan.png")} />
-        </View>
+      </View>
+      <View style={styles.imagenes}>
+        <Image style={styles.imagen} source={require("../assets/calculadora.jpg")} />
+      </View>
       <View style={styles.tituloContainer}>
-        <Text style={styles.titulo}>¡Accede a herramientas y todo eso!</Text>
+        <Text style={styles.titulo}>¡Optimiza tus finanzas!</Text>
     </View>
     <TouchableOpacity onPress={AccesoHerramientas}>
-    <Text style={styles.buttonText}>HERRAMIENTAS</Text>
+    <Text style={styles.buttonText}>RECURSOS</Text>
     </TouchableOpacity>
     </View>
   );
@@ -41,8 +44,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#f6f6e2",
   },
   logo: {
-    width: 300,
-    height: 220,
+    width: 280,
+    height: 195,
+  },
+  imagen: {
+    width: 280,
+    height: 200,
+    marginTop:-10
   },
   
   tituloContainer: {
