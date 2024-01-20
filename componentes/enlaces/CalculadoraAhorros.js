@@ -11,7 +11,7 @@ export default function CalculadoraAhorros() {
   const [periodo, setPeriodo] = useState('');
   const [ahorroNecesario, setAhorroNecesario] = useState('');
 
-
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const calcularAhorroNecesario = () => {
     const metaFloat = parseFloat(meta);
@@ -33,7 +33,7 @@ export default function CalculadoraAhorros() {
         keyboardType="numeric"
         inputStyle={{ fontSize: 20,color:'olive' }}
         style={styles.input}
-        value={meta}
+        
         onChangeText={(text) => setMeta(text)}
         autoFocus={true}
       />
@@ -77,6 +77,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 18,
+    textAlign:'center',
+    fontWeight:'bold',
     
   },
   touchableButton: {
