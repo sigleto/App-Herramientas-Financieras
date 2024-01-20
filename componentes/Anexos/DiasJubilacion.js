@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-
+import Anuncio from './Anuncio';
 export default function App() {
   const [birthDate, setBirthDate] = useState('');
   const [retirementAge, setRetirementAge] = useState({
@@ -54,6 +54,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Fecha de Nacimiento (DD-MM-YYYY):</Text>
+      <Anuncio/>
       <TextInput
         style={styles.input}
         placeholder="DD-MM-YYYY"

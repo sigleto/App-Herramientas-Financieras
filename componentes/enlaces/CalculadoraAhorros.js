@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity,StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import Anuncio from '../Anexos/Anuncio';
 
 
 export default function CalculadoraAhorros() {
@@ -28,6 +28,7 @@ export default function CalculadoraAhorros() {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Meta de ahorro</Text>
+      <Anuncio/>
       <Input
         
         keyboardType="numeric"

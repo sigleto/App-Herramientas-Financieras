@@ -1,11 +1,13 @@
 import React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
+import Anuncio from "./Anuncio";
 
 export default function TablaAmortizacion({ route }) {
   const data = route.params.data || [];
 
   return (
     <View style={styles.container}>
+      <Anuncio/>
       <View style={styles.header}>
         <Text style={styles.columnHeader}>Periodo</Text>
         <Text style={styles.columnHeader}>Cuota</Text>

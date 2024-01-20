@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet,ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+
 
 const Herramientas = () => {
   const navigation = useNavigation();
-
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-9777143216104753/8889863321';
   const navigateToHerramientas = (ruta) => {
     navigation.navigate(ruta);
   };
@@ -22,6 +24,10 @@ const Herramientas = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.tituloOrg}>Elige la herramienta a utilizar</Text>
+      <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
       <View style={styles.organismos}>
         {opciones.map((opcion) => (
           <TouchableOpacity

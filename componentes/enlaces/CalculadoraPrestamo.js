@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
+import Anuncio from "../Anexos/Anuncio";
 
 export default function CalculadoraPrestamos() {
   const [capital, setCapital] = useState("");
@@ -71,6 +72,7 @@ export default function CalculadoraPrestamos() {
   };
   return (
     <View style={styles.container}>
+    <Anuncio/>
     <Text style={styles.label}>Capital</Text>
     <Input
       keyboardType="numeric"

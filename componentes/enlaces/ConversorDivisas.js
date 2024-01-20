@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity,StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
+import Anuncio from '../Anexos/Anuncio';
 
-const API_KEY = 'd93ad7934d4b03cf5de6577a'; // Reemplaza con tu clave de API de Free Currency API
+const API_KEY = '45993|fRCxvDuwsLMfBDy3TpdU'; // Clave de la API de cambio.today
 const monedas = [
   { codigo: 'USD', nombre: 'Dólar estadounidense' },
   { codigo: 'EUR', nombre: 'Euro' },
@@ -42,28 +43,24 @@ const monedas = [
   { codigo: 'TRY', nombre: 'Lira turca' },
   { codigo: 'ZAR', nombre: 'Rand sudafricano' },
 ];
+
 export default function ConversorDivisas() {
   const [cantidad, setCantidad] = useState('');
   const [monedaOrigen, setMonedaOrigen] = useState('USD');
-  const [monedaDestino, setMonedaDestino] = useState('EUR')
+  const [monedaDestino, setMonedaDestino] = useState('EUR');
   const [tipoCambio, setTipoCambio] = useState('');
   const [resultado, setResultado] = useState('');
 
- 
   const obtenerTipoCambio = async () => {
     try {
       const response = await fetch(
-        `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${monedaOrigen}`
+        `https://api.cambio.today/v1/quotes/${monedaOrigen}/${monedaDestino}/json?quantity=${cantidad}&key=${API_KEY}`
       );
       const data = await response.json();
-      console.log('Código de Estado:', response.status);
-      console.log('Respuesta de la API:', data);
-        
-      if (response.ok) {
-        console.log (data)
-        const tasaCambio = data.conversion_rates[monedaDestino]
-        console.log (tasaCambio)
-        setTipoCambio(tasaCambio.toFixed(4).toString());
+
+      if (response.ok && data.status === 'OK') {
+        const tasaCambio = data.result.value;
+        setTipoCambio(tasaCambio.toString());
       } else {
         console.error('Error al obtener el tipo de cambio');
       }
@@ -71,16 +68,16 @@ export default function ConversorDivisas() {
       console.error('Error en la solicitud de tipo de cambio:', error);
     }
   };
-  
+
   const convertirDivisas = () => {
     const cantidadFloat = parseFloat(cantidad);
     const resultadoCalculado = cantidadFloat * parseFloat(tipoCambio);
     setResultado(resultadoCalculado.toFixed(2).toString());
   };
 
-  
   return (
     <View style={styles.container}>
+      <Anuncio />
       {/* Cantidad a convertir */}
       <Text style={styles.label}>Cantidad a convertir</Text>
       <Input
@@ -95,7 +92,7 @@ export default function ConversorDivisas() {
       {/* Moneda de origen */}
       <Text style={styles.label}>Moneda de origen</Text>
       <Picker
-      style={{ height: 50, width: 200 }}
+        style={{ height: 50, width: 200 }}
         selectedValue={monedaOrigen}
         onValueChange={(itemValue) => setMonedaOrigen(itemValue)}
       >
@@ -144,35 +141,34 @@ export default function ConversorDivisas() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    backgroundColor:'#fffbde'
+    backgroundColor: '#fffbde',
   },
   input: {
     marginBottom: 18,
-    textAlign:'center',
-    fontSize:26
-    
+    textAlign: 'center',
+    fontSize: 26,
   },
   touchableButton: {
     marginVertical: 10,
-    backgroundColor:'#555ff7',
-    paddingHorizontal:27,
-    marginTop:20,  
+    backgroundColor: '#555ff7',
+    paddingHorizontal: 27,
+    marginTop: 20,
   },
-  buttonText:{
-    fontSize:22,
-    color:'#f4f8f8'
+  buttonText: {
+    fontSize: 22,
+    color: '#f4f8f8',
   },
   resultText: {
     marginTop: 20,
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#007BFF",
+    fontWeight: 'bold',
+    color: '#007BFF',
   },
-  label:{
-    fontWeight: "bold",
+  label: {
+    fontWeight: 'bold',
     fontSize: 20,
-  }
+  },
 });

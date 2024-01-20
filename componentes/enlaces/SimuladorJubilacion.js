@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Anuncio from '../Anexos/Anuncio';
 
 export default function App() {
   const [edadActual, setEdadActual] = useState('');
@@ -22,6 +23,7 @@ const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
 
   return (
     <View style={styles.container}>
+      <Anuncio/>
       <Text style={styles.label}>Edad actual</Text>
       <TextInput
         style={styles.input}

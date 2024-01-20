@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import Anuncio from '../Anexos/Anuncio';
 
 const CalculadoraInversiones = () => {
   const [principal, setPrincipal] = useState('');
@@ -35,7 +36,7 @@ const CalculadoraInversiones = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Calculadora de Inversiones</Text>
-
+      <Anuncio/>
       <TextInput
         style={styles.input}
         placeholder="Principal"

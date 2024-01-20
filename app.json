@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Herramientas_financieras",
+    "name": "Finanzas fácil",
     "slug": "Herramientas_financieras",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,11 +20,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/Icono.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": ["com.google.android.gms.permission.AD_ID"],
       "package": "com.sigleto.Herramientas_financieras",
-      "versionCode": 1
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,5 +35,9 @@
         "projectId": "b6d0bcac-93ac-42ce-ae55-2201b15409c4"
       }
     }
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-9777143216104753~9886400167"
+    
   }
 }
