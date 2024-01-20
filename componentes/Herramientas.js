@@ -12,9 +12,10 @@ const Herramientas = () => {
   const opciones = [
     { nombre: 'CALCULADORA DE PRÉSTAMOS', ruta: 'Prestamo' },
     { nombre: 'CALCULADORA DE AHORROS', ruta: 'Ahorros' },
+    { nombre: 'CALCULADORA DE INVERSIONES', ruta: 'CalculadoraInversiones' },
     { nombre: 'CONVERSOR DE DIVISAS', ruta: 'Divisa' },
-    { nombre: 'SIMULADOR DE JUBILACIÓN', ruta: 'Jubilacion' },
-    { nombre: 'RENTABILIDAD DE ACCIONES', ruta: 'Acciones' },
+    { nombre: 'RENDIMIENTO PARA LA JUBILACIÓN', ruta: 'Jubilacion' },
+    
     
   ];
 

@@ -47,7 +47,7 @@ const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
       <Text style={styles.label}>Ahorros actuales</Text>
       <TextInput
         style={styles.input}
-        placeholder="Monto actual"
+        placeholder="Monto actual del depósito"
         keyboardType="numeric"
         value={montoActual}
         onChangeText={(text) => setMontoActual(text)}
@@ -73,7 +73,7 @@ const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
 
     
 <TouchableOpacity onPress={DiasJubilacion} style={styles.touchableButton}>
-   <Text style={styles.buttonText}>Tiempo hasta la jubilación</Text>
+   <Text style={styles.buttonText}>Cuanto falta para jubilarte</Text>
 </TouchableOpacity>
     </View>
   );

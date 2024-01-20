@@ -2,12 +2,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity,StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function CalculadoraAhorros() {
   const [meta, setMeta] = useState('');
   const [tasaInteres, setTasaInteres] = useState('');
   const [periodo, setPeriodo] = useState('');
   const [ahorroNecesario, setAhorroNecesario] = useState('');
+
+
 
   const calcularAhorroNecesario = () => {
     const metaFloat = parseFloat(meta);
@@ -58,6 +62,7 @@ export default function CalculadoraAhorros() {
           Ahorro Necesario Mensual: {ahorroNecesario} {ahorroNecesario !== '' && 'EUR'}
         </Text>
       )}
+      
     </View>
   );
 }
