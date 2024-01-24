@@ -12,6 +12,9 @@ const monedas = [
   { codigo: 'ARS', nombre: 'Peso argentino' },
   { codigo: 'UYU', nombre: 'Peso uruguayo' },
   { codigo: 'CLP', nombre: 'Peso chileno' },
+  { codigo: 'PYG', nombre: 'Guaraní paraguayo' },
+  { codigo: 'CRC', nombre: 'Colón costarricense' },
+  { codigo: 'MXN', nombre: 'Peso mexicano' },
   { codigo: 'BGN', nombre: 'Lev búlgaro' },
   { codigo: 'BRL', nombre: 'Real brasileño' },
   { codigo: 'CAD', nombre: 'Dólar canadiense' },
@@ -29,7 +32,6 @@ const monedas = [
   { codigo: 'ISK', nombre: 'Corona islandesa' },
   { codigo: 'JPY', nombre: 'Yen japonés' },
   { codigo: 'KRW', nombre: 'Won surcoreano' },
-  { codigo: 'MXN', nombre: 'Peso mexicano' },
   { codigo: 'MYR', nombre: 'Ringgit malasio' },
   { codigo: 'NOK', nombre: 'Corona noruega' },
   { codigo: 'NZD', nombre: 'Dólar neozelandés' },
@@ -45,22 +47,26 @@ const monedas = [
 ];
 
 export default function ConversorDivisas() {
-  const [cantidad, setCantidad] = useState('');
   const [monedaOrigen, setMonedaOrigen] = useState('USD');
   const [monedaDestino, setMonedaDestino] = useState('EUR');
   const [tipoCambio, setTipoCambio] = useState('');
   const [resultado, setResultado] = useState('');
+  const [mostrarPantallaNumeros, setMostrarPantallaNumeros] = useState(true);
+  const [cantidadIntroducida, setCantidadIntroducida] = useState('');
+  const [mensajeEstado, setMensajeEstado] = useState('');
 
+  
   const obtenerTipoCambio = async () => {
     try {
       const response = await fetch(
-        `https://api.cambio.today/v1/quotes/${monedaOrigen}/${monedaDestino}/json?quantity=${cantidad}&key=${API_KEY}`
+        `https://api.cambio.today/v1/quotes/${monedaOrigen}/${monedaDestino}/json?quantity=${cantidadIntroducida}&key=${API_KEY}`
       );
       const data = await response.json();
 
       if (response.ok && data.status === 'OK') {
         const tasaCambio = data.result.value;
         setTipoCambio(tasaCambio.toString());
+        setMensajeEstado(`Cantidad introducida: ${cantidadIntroducida} ${monedaOrigen}`);
       } else {
         console.error('Error al obtener el tipo de cambio');
       }
@@ -70,25 +76,32 @@ export default function ConversorDivisas() {
   };
 
   const convertirDivisas = () => {
-    const cantidadFloat = parseFloat(cantidad);
+    const cantidadFloat = parseFloat(cantidadIntroducida);
     const resultadoCalculado = cantidadFloat * parseFloat(tipoCambio);
     setResultado(resultadoCalculado.toFixed(2).toString());
+  };
+
+  const ocultarPantallaNumeros = () => {
+    setMostrarPantallaNumeros(false);
   };
 
   return (
     <View style={styles.container}>
       <Anuncio />
       {/* Cantidad a convertir */}
-      <Text style={styles.label}>Cantidad a convertir</Text>
-      <Input
-        keyboardType="numeric"
-        value={cantidad}
-        onChangeText={(text) => setCantidad(text)}
-        inputStyle={{ fontSize: 20, color: 'olive' }}
-        style={styles.input}
-        autoFocus={true}
-      />
-
+      {mostrarPantallaNumeros && (
+        <>
+          <Text style={styles.label}>Cantidad a convertir</Text>
+          <Input
+            keyboardType="numeric"
+            value={cantidadIntroducida}
+            onChangeText={(text) => setCantidadIntroducida(text)}
+            inputStyle={{ fontSize: 20, color: 'olive' }}
+            style={styles.input}
+            autoFocus={true}
+          />
+        </>
+      )}
       {/* Moneda de origen */}
       <Text style={styles.label}>Moneda de origen</Text>
       <Picker
@@ -114,21 +127,23 @@ export default function ConversorDivisas() {
       </Picker>
 
       {/* Obtener Tipo de Cambio */}
-      <TouchableOpacity onPress={obtenerTipoCambio} style={styles.touchableButton}>
+      <TouchableOpacity onPress={() => { obtenerTipoCambio(); ocultarPantallaNumeros(); }} style={styles.touchableButton}>
         <Text style={styles.buttonText}>Obtener Tipo de Cambio</Text>
       </TouchableOpacity>
-
       {tipoCambio !== '' && (
+      <View>
+        <Text style={styles.resultText}>{mensajeEstado}</Text>
         <Text style={styles.resultText}>
+        
           Tipo de Cambio: 1 {monedaOrigen} = {tipoCambio} {monedaDestino}
         </Text>
+        </View>
       )}
-
+      
       {/* Convertir */}
       <TouchableOpacity onPress={convertirDivisas} style={styles.touchableButton}>
         <Text style={styles.buttonText}>Convertir</Text>
       </TouchableOpacity>
-
       {resultado !== '' && (
         <Text style={styles.resultText}>
           Resultado: {resultado} {monedaDestino}

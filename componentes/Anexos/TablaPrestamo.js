@@ -3,6 +3,9 @@ import { View, Text, FlatList, StyleSheet } from "react-native";
 import Anuncio from "./Anuncio";
 
 export default function TablaAmortizacion({ route }) {
+  console.log('Llegó a TablaPrestamo'); // Verifica si llegó a esta pantalla
+  
+
   const data = route.params.data || [];
 
   return (
