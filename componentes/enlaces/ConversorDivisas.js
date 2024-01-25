@@ -12,6 +12,8 @@ const monedas = [
   { codigo: 'ARS', nombre: 'Peso argentino' },
   { codigo: 'UYU', nombre: 'Peso uruguayo' },
   { codigo: 'CLP', nombre: 'Peso chileno' },
+  { codigo: 'COP', nombre: 'Peso colombiano' },
+  { codigo: 'PEN', nombre: 'Sol peruano' },
   { codigo: 'PYG', nombre: 'Guaraní paraguayo' },
   { codigo: 'CRC', nombre: 'Colón costarricense' },
   { codigo: 'MXN', nombre: 'Peso mexicano' },
