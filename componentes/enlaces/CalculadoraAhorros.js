@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity,StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 import Anuncio from '../Anexos/Anuncio';
 
 
@@ -11,19 +12,17 @@ export default function CalculadoraAhorros() {
   const [periodo, setPeriodo] = useState('');
   const [ahorroNecesario, setAhorroNecesario] = useState('');
 
-  const [focusedInput, setFocusedInput] = useState(null);
+    const navigation = useNavigation();
 
-  const calcularAhorroNecesario = () => {
-    const metaFloat = parseFloat(meta);
-    const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12; // Tasa de interés mensual
-    const periodoFloat = parseFloat(periodo);
-
-    const ahorroNecesarioCalculado =
-      metaFloat /
-      ((Math.pow(1 + tasaInteresFloat, periodoFloat) - 1) / tasaInteresFloat);
-
-    setAhorroNecesario(ahorroNecesarioCalculado.toFixed(2).toString());
+  const calcularCuota = () => {   
+    navigation.navigate("ResultadoAhorro", {
+      meta:meta,
+      tasaInteres:tasaInteres,
+      periodo:periodo,
+            
+    });
   };
+  
 
   return (
     <View style={styles.container}>
@@ -54,15 +53,11 @@ export default function CalculadoraAhorros() {
         value={periodo}
         onChangeText={(text) => setPeriodo(text)}
       />
-      <TouchableOpacity onPress={calcularAhorroNecesario} style={styles.touchableButton}
+      <TouchableOpacity onPress={calcularCuota} style={styles.touchableButton}
       >
         <Text style={styles.buttonText}>Calcular Ahorro Necesario</Text>
       </TouchableOpacity>
-      {ahorroNecesario !== '' && (
-        <Text style={styles.resultText}>
-          Ahorro Necesario Mensual: {ahorroNecesario} {ahorroNecesario !== '' && 'EUR'}
-        </Text>
-      )}
+      
       
     </View>
   );

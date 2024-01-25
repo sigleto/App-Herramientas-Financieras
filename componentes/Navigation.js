@@ -19,6 +19,7 @@ import CalculadoraInversiones from './enlaces/CalculadoraInversiones';
 import ResultadosPrestamo from './Anexos/ResultadosPrestamo';
 import ResultadoJubilación from './Anexos/ResultadoJubilación';
 import ResultadoInversiones from './Anexos/ResultadoInversiones';
+import ResultadoAhorro from './Anexos/ResultadoAhorro';
 
 
 const Stack = createStackNavigator();
@@ -42,6 +43,7 @@ export function HerramientasStack(){
         <Stack.Screen name="ResultadosPrestamo" component={ResultadosPrestamo}options={{ headerShown: false }} />
         <Stack.Screen name="ResultadoJubilacion" component={ResultadoJubilación}options={{ headerShown: false }} />
         <Stack.Screen name="ResultadoInversiones" component={ResultadoInversiones}options={{ headerShown: false }} />
+        <Stack.Screen name="ResultadoAhorro" component={ResultadoAhorro}options={{ headerShown: false }} />
         
         
         
