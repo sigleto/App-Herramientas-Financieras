@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+
 import Anuncio from '../Anexos/Anuncio';
 
 const CalculadoraInversiones = () => {
@@ -9,28 +11,19 @@ const CalculadoraInversiones = () => {
   const [contributions, setContributions] = useState('');
   const [result, setResult] = useState(null);
 
-  const calculateInvestment = () => {
-    const p = parseFloat(principal);
-    const r = parseFloat(rate) / 100; // Convertir la tasa a decimal
-    const t = parseFloat(time);
-    const c = parseFloat(contributions);
+  const navigation = useNavigation();
 
-    if (!p || isNaN(p) || !r || isNaN(r) || !t || isNaN(t)) {
-      setResult('Ingrese valores válidos');
-      return;
-    }
-
-    let futureValue = 0;
-
-    if (!c || isNaN(c)) {
-      // Si no se proporcionan contribuciones o no son un número válido, calcular sin contribuciones.
-      futureValue = p * Math.pow(1 + r, t);
-    } else {
-      futureValue = p * Math.pow(1 + r, t) + c * ((Math.pow(1 + r, t) - 1) / r);
-    }
-
-    setResult(futureValue.toFixed(2));
+  const calcularCuota = () => {   
+    navigation.navigate("ResultadoInversiones", {
+      principal:principal,
+      rate:rate,
+      time:time,
+      contributions:contributions
+      
+    });
   };
+  
+  
 
   
   return (
@@ -76,16 +69,10 @@ const CalculadoraInversiones = () => {
         textAlign="center"  // Centra el texto
         fontSize={20}       // Ajusta el tamaño de la fuent
       />
-      <TouchableOpacity style={styles.touchableButton} onPress={calculateInvestment}>
+      <TouchableOpacity style={styles.touchableButton} onPress={calcularCuota}>
         <Text style={styles.buttonText}>Calcular</Text>
       </TouchableOpacity>
-      
-
-      <View>
-        <Text style={styles.resultText}>
-          Valor Futuro: {result !== null ? result : ''}
-        </Text>
-      </View>
+            
     </View>
   );
 };

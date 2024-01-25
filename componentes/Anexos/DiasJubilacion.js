@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import Anuncio from './Anuncio';
+
 export default function App() {
   const [birthDate, setBirthDate] = useState('');
   const [retirementAge, setRetirementAge] = useState({
@@ -12,6 +13,7 @@ export default function App() {
     months: null,
     days: null,
   });
+
   const calculateTimeRemaining = () => {
     // Validar que se hayan ingresado ambas fechas
     if (!birthDate || (!retirementAge.years && !retirementAge.months)) {
@@ -54,7 +56,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Fecha de Nacimiento (DD-MM-YYYY):</Text>
-      <Anuncio/>
+      <Anuncio />
       <TextInput
         style={styles.input}
         placeholder="DD-MM-YYYY"
@@ -104,14 +106,16 @@ export default function App() {
       </TouchableOpacity>
 
       {timeRemaining.years !== null && (
-        <Text style={styles.resultText}>
-          Tiempo restante hasta la jubilación:{' '}
-          {timeRemaining.years > 0 && `${timeRemaining.years} años`}
-          {timeRemaining.years > 0 && (timeRemaining.months > 0 || timeRemaining.days > 0) && ', '}
-          {timeRemaining.months > 0 && `${timeRemaining.months} meses`}
-          {timeRemaining.months > 0 && timeRemaining.days > 0 && ' y '}
-          {timeRemaining.days > 0 && `${timeRemaining.days} días`}
-        </Text>
+        <View style={styles.resultContainer}>
+          <Text style={styles.resultLabel}>Tiempo hasta la jubilación:</Text>
+          <Text style={styles.resultText}>
+            {timeRemaining.years > 0 && `${timeRemaining.years} años`}
+            {timeRemaining.years > 0 && (timeRemaining.months > 0 || timeRemaining.days > 0) && ', '}
+            {timeRemaining.months > 0 && `${timeRemaining.months} meses`}
+            {timeRemaining.months > 0 && timeRemaining.days > 0 && ' y '}
+            {timeRemaining.days > 0 && `${timeRemaining.days} días`}
+          </Text>
+        </View>
       )}
     </View>
   );
@@ -161,8 +165,18 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#f4f8f8'
   },
-  resultText: {
+  resultContainer: {
     marginTop: 20,
+    alignItems: 'center',
+  },
+  resultLabel: {
+    fontSize: 23,
+    fontWeight: "bold",
+    color: '#bca037',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  resultText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#36c23a",

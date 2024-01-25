@@ -17,6 +17,9 @@ import PoliticaPrivacidad from './Anexos/PoliticaPrivacidad';
 import DescargoResponsabilidad from './Anexos/DescargoResponsabilidad';
 import CalculadoraInversiones from './enlaces/CalculadoraInversiones';
 import ResultadosPrestamo from './Anexos/ResultadosPrestamo';
+import ResultadoJubilación from './Anexos/ResultadoJubilación';
+import ResultadoInversiones from './Anexos/ResultadoInversiones';
+
 
 const Stack = createStackNavigator();
 
@@ -37,6 +40,8 @@ export function HerramientasStack(){
         <Stack.Screen name="DescargoResponsabilidad" component={DescargoResponsabilidad}options={{ headerShown: false }} />
         <Stack.Screen name="CalculadoraInversiones" component={CalculadoraInversiones}options={{ headerShown: false }} />
         <Stack.Screen name="ResultadosPrestamo" component={ResultadosPrestamo}options={{ headerShown: false }} />
+        <Stack.Screen name="ResultadoJubilacion" component={ResultadoJubilación}options={{ headerShown: false }} />
+        <Stack.Screen name="ResultadoInversiones" component={ResultadoInversiones}options={{ headerShown: false }} />
         
         
         

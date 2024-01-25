@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity,ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Anuncio from '../Anexos/Anuncio';
 
@@ -8,20 +8,29 @@ export default function App() {
   const [edadJubilacion, setEdadJubilacion] = useState('');
   const [montoActual, setMontoActual] = useState('');
   const [tasaInteres, setTasaInteres] = useState('');
-  const [resultado, setResultado] = useState(null);
-
-  const calcularJubilacion = () => {
-    const tiempoRestante = edadJubilacion - edadActual;
-    const montoFinal = montoActual * Math.pow((1 + tasaInteres / 100), tiempoRestante);
-
-    setResultado(`El monto estimado para la jubilación es: ${montoFinal.toFixed(2)}`);
-  };
+  
 
   const navigation=useNavigation()
 
-const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
+  const calcularJubilacion = () => {
+    
+      navigation.navigate("ResultadoJubilacion", {
+        edadActual: edadActual,
+        edadJubilacion: edadJubilacion,
+        montoActual: montoActual,
+        tasaInteres: tasaInteres
+        });
+    };
+
+  
+
+
 
   return (
+    <ScrollView
+    contentContainerStyle={{ flexGrow: 1 }}
+    keyboardShouldPersistTaps="handled"
+  >
     <View style={styles.container}>
       <Anuncio/>
       <Text style={styles.label}>Edad actual</Text>
@@ -71,13 +80,10 @@ const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
 <TouchableOpacity style={styles.touchableButton} onPress={calcularJubilacion}>
         <Text style={styles.buttonText}>Calcular</Text>
       </TouchableOpacity>
-      {resultado && <Text style={styles.resultText}>{resultado}</Text>}
+      
 
-    
-<TouchableOpacity onPress={DiasJubilacion} style={styles.touchableButton}>
-   <Text style={styles.buttonText}>Cuanto falta para jubilarte</Text>
-</TouchableOpacity>
-    </View>
+  </View>
+  </ScrollView>
   );
 }
 
