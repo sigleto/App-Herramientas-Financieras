@@ -93,6 +93,10 @@ const styles = StyleSheet.create({
     borderColor: '#888',
     padding: 6,
     width: '80%',
+    borderWidth: 2,  // Agregar un borde
+    borderColor: "#555ff7",  // Color del borde
+    borderRadius: 10,  // Bordes redondeados
+    padding: 10,  // Espaciado interno
   },
   resultText: {
     marginTop: 20,

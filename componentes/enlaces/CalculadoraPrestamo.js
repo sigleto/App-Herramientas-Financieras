@@ -80,15 +80,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     marginRight: 20,
+   
   },
   inputFieldContainer: {
     flex: 2,
     justifyContent: "space-between",
+    
   },
   input: {
     marginBottom: 18,
     textAlign: "center",
     fontWeight: "bold",
+    borderWidth: 2,  // Agregar un borde
+    borderColor: "#555ff7",  // Color del borde
+    borderRadius: 10,  // Bordes redondeados
+    padding: 10,  // Espaciado interno
   },
   touchableButton: {
     backgroundColor: "#555ff7",

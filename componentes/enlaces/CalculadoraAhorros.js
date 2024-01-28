@@ -75,6 +75,10 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     textAlign:'center',
     fontWeight:'bold',
+    borderWidth: 2,  // Agregar un borde
+    borderColor: "#555ff7",  // Color del borde
+    borderRadius: 10,  // Bordes redondeados
+    padding: 10,  // Espaciado interno
     
   },
   touchableButton: {
