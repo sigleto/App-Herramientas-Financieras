@@ -59,7 +59,7 @@ export default function ResultadoJubilación({ route }) {
     
       <Text style={styles.labelText}>
   El monto estimado para la jubilación es:{" "}
-  <Text style={styles.resultText}>
+  <Text style={styles.resultTextr}>
     {resultado && resultado.montoFinal
       ? parseFloat(resultado.montoFinal).toFixed(2)
       : "No disponible"}
@@ -112,6 +112,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#007BFF',
+    fontWeight: 'bold',
+    textAlign:'center'
+  },
+  resultTextr: {
+    marginTop: 30,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'red',
     fontWeight: 'bold',
     textAlign:'center'
   },

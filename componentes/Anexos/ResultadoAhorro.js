@@ -36,7 +36,7 @@ export default function ResultadoAhorro({ route }) {
     <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres} %</Text></Text>
     <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} meses</Text></Text>
     <Text style={styles.enunciado}>Resultado</Text>
-    <Text style={styles.labelText}>Ahorro necesario mensual: <Text style={styles.resultText}>{parseFloat(ahorroNecesario).toFixed(2)}</Text></Text>
+    <Text style={styles.labelText}>Ahorro necesario mensual: <Text style={styles.resultTextr}>{parseFloat(ahorroNecesario).toFixed(2)}</Text></Text>
     
      </View>
   );
@@ -80,6 +80,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign:'center'
   },
+  resultTextr: {
+    marginTop: 30,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'red',
+    fontWeight: 'bold',
+    textAlign:'center'
+  },
+  
 
   enunciado: {
     marginTop: 40,

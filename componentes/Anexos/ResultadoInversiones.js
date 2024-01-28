@@ -48,7 +48,7 @@ export default function ResultadoInversiones({ route }) {
     <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{time} años</Text></Text>
     <Text style={styles.labelText}>Contribuciones anuales: <Text style={styles.resultText}>{contributions} </Text></Text>
     <Text style={styles.enunciado}>Resultado</Text>
-    <Text style={styles.labelText}>Valor futuro: <Text style={styles.resultText}>{parseFloat(result).toFixed(2)}</Text></Text>
+    <Text style={styles.labelText}>Valor futuro: <Text style={styles.resultTextr}>{parseFloat(result).toFixed(2)}</Text></Text>
     
      </View>
   );
@@ -89,6 +89,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#007BFF',
+    fontWeight: 'bold',
+    textAlign:'center'
+  },
+  resultTextr: {
+    marginTop: 30,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'red',
     fontWeight: 'bold',
     textAlign:'center'
   },

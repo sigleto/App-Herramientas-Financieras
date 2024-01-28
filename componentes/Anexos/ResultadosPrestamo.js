@@ -95,7 +95,7 @@ export default function ResultadosPrestamo({ route }) {
     <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres}%</Text></Text>
     <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} meses</Text></Text>
     <Text style={styles.enunciado}>Resultados</Text>
-    <Text style={styles.labelText}>Cuota Mensual: <Text style={styles.resultText}>{parseFloat(cuota).toFixed(2)}</Text></Text>
+    <Text style={styles.labelText}>Cuota Mensual: <Text style={styles.resultTextr}>{parseFloat(cuota).toFixed(2)}</Text></Text>
     <Text style={styles.labelText}>Total Pagado de intereses: <Text style={styles.resultText}>{parseFloat(totalIntereses).toFixed(2)}</Text></Text>
     <Text style={styles.labelText}>Total Pagado al final: <Text style={styles.resultText}>{parseFloat(totalPagado).toFixed(2)}</Text></Text>
 
@@ -144,6 +144,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#007BFF',
+    fontWeight: 'bold',
+    textAlign:'center'
+  },
+  resultTextr: {
+    marginTop: 30,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'red',
     fontWeight: 'bold',
     textAlign:'center'
   },
