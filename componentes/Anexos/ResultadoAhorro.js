@@ -27,7 +27,7 @@ export default function ResultadoAhorro({ route }) {
   }, [navigation]);
 
   
-
+  const volver=()=>{navigation.navigate('Home')}
   
   return (
     <View>
@@ -37,7 +37,12 @@ export default function ResultadoAhorro({ route }) {
     <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} meses</Text></Text>
     <Text style={styles.enunciado}>Resultado</Text>
     <Text style={styles.labelText}>Ahorro necesario mensual: <Text style={styles.resultTextr}>{parseFloat(ahorroNecesario).toFixed(2)}</Text></Text>
-    
+    <TouchableOpacity
+  onPress={volver}
+  style={styles.touchableButtonV}
+>
+  <Text style={styles.buttonText}>VOLVER</Text>
+</TouchableOpacity>
      </View>
   );
 }
@@ -112,5 +117,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign:'center'
    
+  },
+  touchableButtonV: {
+    marginVertical: 10,
+    backgroundColor: '#555ff7',
+    paddingHorizontal:5,
+    marginTop: 100,
+    borderRadius: 10,
+    alignSelf: 'center',
   },
 });

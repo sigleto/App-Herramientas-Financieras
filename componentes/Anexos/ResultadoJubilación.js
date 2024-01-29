@@ -46,6 +46,7 @@ export default function ResultadoJubilación({ route }) {
   }, [navigation, DiasJubilacion]);
 
   
+  const volver=()=>{navigation.navigate('Home')}
   return (
     <View>
       <Text style={styles.enunciado}>Datos introducidos</Text>
@@ -73,6 +74,14 @@ export default function ResultadoJubilación({ route }) {
 >
   <Text style={styles.buttonText}>Cuanto falta para jubilarte</Text>
 </TouchableOpacity>
+
+<TouchableOpacity
+  onPress={volver}
+  style={styles.touchableButtonV}
+>
+  <Text style={styles.buttonTextV}>VOLVER</Text>
+</TouchableOpacity>
+
     </View>
   );
 }
@@ -146,5 +155,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign:'center'
    
+  },
+  touchableButtonV: {
+    marginVertical: 10,
+    backgroundColor: 'olive',
+    paddingHorizontal:5,
+    marginTop: 25,
+    borderRadius: 10,
+    alignSelf: 'center',
+
+  },
+   buttonTextV: {
+    fontSize: 15,
+    color: 'white',
   },
 });

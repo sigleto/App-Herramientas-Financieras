@@ -87,7 +87,8 @@ export default function ResultadosPrestamo({ route }) {
     });
   }, [navigation, AccesoTabla]);
 
-  
+  const volver=()=>{navigation.navigate('Home')}
+
   return (
     <View>
       <Text style={styles.enunciado}>Datos introducidos</Text>
@@ -104,6 +105,13 @@ export default function ResultadosPrestamo({ route }) {
   style={styles.touchableButton}
 >
   <Text style={styles.buttonText}>Consultar Tabla</Text>
+</TouchableOpacity>
+
+ <TouchableOpacity
+  onPress={volver}
+  style={styles.touchableButtonV}
+>
+  <Text style={styles.buttonText}>VOLVER</Text>
 </TouchableOpacity>
     </View>
   );
@@ -130,6 +138,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27,
     marginTop: 40,
     borderRadius: 10,
+  },
+  touchableButtonV: {
+    marginVertical: 10,
+    backgroundColor: '#555ff7',
+    paddingHorizontal:5,
+    marginTop: 15,
+    borderRadius: 10,
+    alignSelf: 'center',
   },
 
   buttonText: {

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-
 import Anuncio from '../Anexos/Anuncio';
 
 const CalculadoraInversiones = () => {
@@ -9,75 +8,83 @@ const CalculadoraInversiones = () => {
   const [rate, setRate] = useState('');
   const [time, setTime] = useState('');
   const [contributions, setContributions] = useState('');
-  const [result, setResult] = useState(null);
-
   const navigation = useNavigation();
 
-  const calcularCuota = () => {   
-    navigation.navigate("ResultadoInversiones", {
-      principal:principal,
-      rate:rate,
-      time:time,
-      contributions:contributions
-      
-    });
+  const calcularCuota = () => {
+    if (!principal || !rate || !time || !contributions) {
+      // Si algún campo está vacío, muestra un aviso y no navega a la pantalla de resultados
+      alert('Por favor, completa todos los campos.');
+    } else {
+      navigation.navigate("ResultadoInversiones", {
+        principal: principal,
+        rate: rate,
+        time: time,
+        contributions: contributions
+      });
+    }
   };
-  
-  
 
-  
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Calculadora de Inversiones</Text>
-      <Anuncio/>
-      <TextInput
-        style={styles.input}
-        placeholder="Principal"
-        keyboardType="numeric"
-        value={principal}
-        onChangeText={(text) => setPrincipal(text)}
-        textAlign="center"  // Centra el texto
-        fontSize={20}       // Ajusta el tamaño de la fuent
-      />
+      <Anuncio />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Tasa de Interés (%)"
-        keyboardType="numeric"
-        value={rate}
-        onChangeText={(text) => setRate(text)}
-        textAlign="center"  // Centra el texto
-        fontSize={20}       // Ajusta el tamaño de la fuent
-      />
+      <View style={styles.inputContainer}>
+        <View style={styles.row}>
+          <Text style={styles.label}>Principal</Text>
+          <TextInput
+            style={styles.input}
+            
+            keyboardType="numeric"
+            value={principal}
+            onChangeText={(text) => setPrincipal(text)}
+            textAlign="center"
+          />
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Tiempo (años)"
-        keyboardType="numeric"
-        value={time}
-        onChangeText={(text) => setTime(text)}
-        textAlign="center"  // Centra el texto
-        fontSize={20}       // Ajusta el tamaño de la fuent
-      />
+        <View style={styles.row}>
+          <Text style={styles.labelA}>Tasa de Interés (%)</Text>
+          <TextInput
+            style={styles.input}
+            
+            keyboardType="numeric"
+            value={rate}
+            onChangeText={(text) => setRate(text)}
+            textAlign="center"
+          />
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Contribuciones Anuales"
-        keyboardType="numeric"
-        value={contributions}
-        onChangeText={(text) => setContributions(text)}
-        textAlign="center"  // Centra el texto
-        fontSize={20}       // Ajusta el tamaño de la fuent
-      />
+        <View style={styles.row}>
+          <Text style={styles.label}>Tiempo (años)</Text>
+          <TextInput
+            style={styles.input}
+            
+            keyboardType="numeric"
+            value={time}
+            onChangeText={(text) => setTime(text)}
+            textAlign="center"
+          />
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.label}>Contribuciones Anuales</Text>
+          <TextInput
+            style={styles.input}
+            
+            keyboardType="numeric"
+            value={contributions}
+            onChangeText={(text) => setContributions(text)}
+            textAlign="center"
+          />
+        </View>
+      </View>
+
       <TouchableOpacity style={styles.touchableButton} onPress={calcularCuota}>
         <Text style={styles.buttonText}>Calcular</Text>
       </TouchableOpacity>
-            
     </View>
   );
 };
-
-export default CalculadoraInversiones;
 
 const styles = StyleSheet.create({
   container: {
@@ -87,37 +94,47 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#fffbde',
   },
-  input: {
-    marginBottom: 18,
-    borderWidth: 1,
-    borderColor: '#888',
-    padding: 6,
-    width: '80%',
-    borderWidth: 2,  // Agregar un borde
-    borderColor: "#555ff7",  // Color del borde
-    borderRadius: 10,  // Bordes redondeados
-    padding: 10,  // Espaciado interno
-  },
-  resultText: {
-    marginTop: 20,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#36c23a',
-  },
   label: {
     fontWeight: 'bold',
     fontSize: 22,
-    marginBottom:40,
-    color:'olive',
+    marginBottom: 15,
+    color: 'olive',
+  },
+  labelA: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    marginBottom: 15,
+    color: '#b0950f',
+  },
+  inputContainer: {
+    width: '100%',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  input: {
+    flex: 1,
+    marginLeft: 10,
+    borderWidth: 2,
+    borderColor: '#555ff7',
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 20,
   },
   touchableButton: {
-    marginVertical: 10,
-    backgroundColor:'#555ff7',
-    paddingHorizontal:27,
-    marginTop:20,  
+    backgroundColor: '#555ff7',
+    paddingHorizontal: 27,
+    marginTop: 20,
+    borderRadius: 10,
   },
-  buttonText:{
-    fontSize:22,
-    color:'#f4f8f8'
+  buttonText: {
+    fontSize: 22,
+    color: '#f4f8f8',
+    textAlign: 'center',
   },
 });
+
+export default CalculadoraInversiones;

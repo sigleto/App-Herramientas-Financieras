@@ -38,7 +38,7 @@ export default function ResultadoInversiones({ route }) {
   }, [navigation]);
 
   
-
+  const volver=()=>{navigation.navigate('Home')}
   
   return (
     <View>
@@ -49,7 +49,12 @@ export default function ResultadoInversiones({ route }) {
     <Text style={styles.labelText}>Contribuciones anuales: <Text style={styles.resultText}>{contributions} </Text></Text>
     <Text style={styles.enunciado}>Resultado</Text>
     <Text style={styles.labelText}>Valor futuro: <Text style={styles.resultTextr}>{parseFloat(result).toFixed(2)}</Text></Text>
-    
+    <TouchableOpacity
+     onPress={volver}
+     style={styles.touchableButtonV}
+      >
+      <Text style={styles.buttonText}>VOLVER</Text>
+      </TouchableOpacity>
      </View>
   );
 }
@@ -124,5 +129,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign:'center'
    
+  },
+  touchableButtonV: {
+    marginVertical: 10,
+    backgroundColor: '#555ff7',
+    paddingHorizontal:5,
+    marginTop: 100,
+    borderRadius: 10,
+    alignSelf: 'center',
   },
 });

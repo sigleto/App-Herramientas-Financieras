@@ -1,4 +1,3 @@
-// CalculadoraPrestamos.js
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
@@ -13,22 +12,30 @@ export default function CalculadoraPrestamos() {
   const navigation = useNavigation();
 
   const calcularCuota = () => {
-    navigation.navigate("ResultadosPrestamo", {
-      capital: capital,
-      tasaInteres: tasaInteres,
-      periodo: periodo,
-    });
+    if (!capital || !tasaInteres || !periodo) {
+      // Si algún campo está vacío, muestra un aviso y no navega a la pantalla de resultados
+      alert('Por favor, completa todos los campos.');
+    } else {
+      navigation.navigate("ResultadosPrestamo", {
+        capital: capital,
+        tasaInteres: tasaInteres,
+        periodo: periodo,
+      });
+    }
   };
-
+  
   return (
     <View style={styles.container}>
       <Anuncio />
+      <Text style={styles.labelA}>Calculadora de Préstamos</Text>
       <View style={styles.inputContainer}>
         <View style={styles.labelContainer}>
           <Text style={styles.label}>Capital</Text>
           <Text style={styles.label}>Tasa de Interés (%)</Text>
+          <View style={styles.cerca}>
           <Text style={styles.label}>Período (meses)</Text>
-        </View>
+          </View>
+      </View>
         <View style={styles.inputFieldContainer}>
           <Input
             keyboardType="numeric"
@@ -36,7 +43,6 @@ export default function CalculadoraPrestamos() {
             onChangeText={(text) => setCapital(text)}
             inputStyle={{ fontSize: 20, color: "olive" }}
             style={styles.input}
-            placeholder="Cantidad a solicitar"
             autoFocus={true}
           />
           <Input
@@ -45,7 +51,7 @@ export default function CalculadoraPrestamos() {
             onChangeText={(text) => setTasaInteres(text)}
             inputStyle={{ fontSize: 20, color: "olive" }}
             style={styles.input}
-            placeholder="Tipo de interés"
+            
           />
           <Input
             keyboardType="numeric"
@@ -53,7 +59,7 @@ export default function CalculadoraPrestamos() {
             onChangeText={(text) => setPeriodo(text)}
             inputStyle={{ fontSize: 20, color: "olive" }}
             style={styles.input}
-            placeholder="Plazo del préstamo"
+            
           />
         </View>
       </View>
@@ -67,47 +73,56 @@ export default function CalculadoraPrestamos() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: '#fffbde',
   },
   inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
   },
   labelContainer: {
     flex: 1,
-    justifyContent: "space-between",
-    marginRight: 20,
-   
+    justifyContent: 'space-between',
+    marginRight: 20, // Retain the right margin
   },
   inputFieldContainer: {
-    flex: 2,
-    justifyContent: "space-between",
-    
+    flex: 2, // Expand input field container to fill the available space
+    justifyContent: 'space-between',
   },
   input: {
     marginBottom: 18,
-    textAlign: "center",
-    fontWeight: "bold",
-    borderWidth: 2,  // Agregar un borde
-    borderColor: "#555ff7",  // Color del borde
-    borderRadius: 10,  // Bordes redondeados
-    padding: 10,  // Espaciado interno
+    textAlign: 'center',
+    fontWeight: 'bold',
+    borderWidth: 2, // Add a border
+    borderColor: '#555ff7', // Border color
+    borderRadius: 10, // Rounded corners
+    padding: 12, // Internal spacing
   },
   touchableButton: {
-    backgroundColor: "#555ff7",
+    backgroundColor: '#555ff7',
     paddingHorizontal: 27,
     marginTop: 20,
   },
   buttonText: {
     fontSize: 22,
-    color: "#f4f8f8",
-    textAlign:'center',
+    color: '#f4f8f8',
+    textAlign: 'center',
   },
   label: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 20,
   },
+  labelA: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    marginBottom: 15,
+    color: '#b0950f',
+    textAlign:'center'
+  },
+  cerca:{
+    marginBottom:40,
+  }
+  
 });

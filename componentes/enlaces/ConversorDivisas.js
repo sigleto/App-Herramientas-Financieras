@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { Input } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import Anuncio from '../Anexos/Anuncio';
+import { useNavigation } from '@react-navigation/native';
 
 const API_KEY = '45993|fRCxvDuwsLMfBDy3TpdU'; // Clave de la API de cambio.today
 const monedas = [
@@ -87,6 +88,8 @@ export default function ConversorDivisas() {
     setMostrarPantallaNumeros(false);
   };
 
+  const navigation=useNavigation()
+  const volver=()=>{navigation.navigate('Home')}
   return (
     <View style={styles.container}>
       <Anuncio />
@@ -151,6 +154,13 @@ export default function ConversorDivisas() {
           Resultado: {resultado} {monedaDestino}
         </Text>
       )}
+
+<TouchableOpacity
+  onPress={volver}
+  style={styles.touchableButtonV}
+>
+  <Text style={styles.buttonTextV}>VOLVER</Text>
+</TouchableOpacity>
     </View>
   );
 }
@@ -178,6 +188,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#f4f8f8',
   },
+  buttonTextV: {
+    fontSize: 15,
+    color: 'white',
+  },
   resultText: {
     marginTop: 20,
     fontSize: 18,
@@ -187,5 +201,14 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
     fontSize: 20,
+  },
+   touchableButtonV: {
+    marginVertical: 10,
+    backgroundColor: 'olive',
+    paddingHorizontal:5,
+    marginTop: 25,
+    borderRadius: 10,
+    alignSelf: 'center',
+
   },
 });

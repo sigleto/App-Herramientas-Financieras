@@ -14,15 +14,19 @@ export default function CalculadoraAhorros() {
 
     const navigation = useNavigation();
 
-  const calcularCuota = () => {   
-    navigation.navigate("ResultadoAhorro", {
-      meta:meta,
-      tasaInteres:tasaInteres,
-      periodo:periodo,
-            
-    });
-  };
-  
+    const calcularCuota = () => {
+      if (!meta || !tasaInteres || !periodo) {
+        // Si algún campo está vacío, muestra un aviso y no navega a la pantalla de resultados
+        alert('Por favor, completa todos los campos.');
+      } else {
+        navigation.navigate("ResultadoAhorro", {
+          meta: meta,
+          tasaInteres: tasaInteres,
+          periodo: periodo,          
+        });
+      }
+    };
+    
 
   return (
     <View style={styles.container}>
