@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity,ScrollView } from "react-native";
 import { Input } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import Anuncio from "../Anexos/Anuncio";
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 export default function CalculadoraPrestamos() {
   const [capital, setCapital] = useState("");
@@ -23,10 +23,17 @@ export default function CalculadoraPrestamos() {
       });
     }
   };
-  
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-9777143216104753/8889863321';
+  const navigateToHerramientas = (ruta) => {
+    navigation.navigate(ruta);
+  };
   return (
+    <ScrollView>
     <View style={styles.container}>
-      <Anuncio />
+       <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
       <Text style={styles.labelA}>Calculadora de Préstamos</Text>
       <View style={styles.inputContainer}>
         <View style={styles.labelContainer}>
@@ -66,7 +73,9 @@ export default function CalculadoraPrestamos() {
       <TouchableOpacity onPress={calcularCuota} style={styles.touchableButton}>
         <Text style={styles.buttonText}>Calcular Cuota</Text>
       </TouchableOpacity>
+     
     </View>
+    </ScrollView>
   );
 }
 
@@ -103,12 +112,15 @@ const styles = StyleSheet.create({
   touchableButton: {
     backgroundColor: '#555ff7',
     paddingHorizontal: 27,
-    marginTop: 20,
+    marginTop: 2,
+    borderRadius:10
   },
   buttonText: {
+    
     fontSize: 22,
     color: '#f4f8f8',
     textAlign: 'center',
+    
   },
   label: {
     fontWeight: 'bold',

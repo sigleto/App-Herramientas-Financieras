@@ -1,63 +1,158 @@
+// ResultadoInversiones.js
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 export default function ResultadoInversiones({ route }) {
   const navigation = useNavigation();
-  const { principal,rate,time,contributions } = route.params;
+  const { principal, rate, time, contributions, tipoInteres, unidadPeriodo } =
+    route.params;
+
   const [result, setResult] = useState(null);
-  
-
+  const [totalIntereses, setTotalIntereses] = useState("");  // Agrega este estado
+  const [totalPagado, setTotalPagado] = useState(""); 
+  const [rendimientoAcumulado, setRendimientoAcumulado] = useState("");
+  const [ganancia,setGanancia]=useState('')
+ 
   const calculateInvestment = () => {
-    const p = parseFloat(principal);
-    const r = parseFloat(rate) / 100; // Convertir la tasa a decimal
-    const t = parseFloat(time);
-    const c = parseFloat(contributions);
-
-    if (!p || isNaN(p) || !r || isNaN(r) || !t || isNaN(t)) {
-      setResult('Ingrese valores válidos');
-      return;
-    }
-
-    let futureValue = 0;
-
-    if (!c || isNaN(c)) {
-      // Si no se proporcionan contribuciones o no son un número válido, calcular sin contribuciones.
-      futureValue = p * Math.pow(1 + r, t);
-    } else {
-      futureValue = p * Math.pow(1 + r, t) + c * ((Math.pow(1 + r, t) - 1) / r);
-    }
-
-    setResult(futureValue.toFixed(2));
-  };
-
+    const principalAmount = parseFloat(principal);
+    const ratePercentage = parseFloat(rate) / 100;
+    const timePeriod = parseFloat(time);
+    const annualContributions = parseFloat(contributions);
   
+    let totalIntereses = 0;
+    let totalPagado = principalAmount; // Empieza con el capital inicial
+    let rendimientoAcumulado = 0;
+  
+    if (tipoInteres === 'anual' && unidadPeriodo === 'años') {
+      // Caso de interés anual y período en años
+      for (let i = 0; i < timePeriod; i++) {
+        const interest = totalPagado * ratePercentage;
+        totalIntereses += interest;
+        totalPagado += annualContributions + interest;
+      }
+    } else if (tipoInteres === 'anual' && unidadPeriodo === 'meses') {
+      // Caso de interés anual y período en meses
+      const totalMonths = timePeriod;
+      for (let i = 0; i < totalMonths; i++) {
+        const interest = totalPagado * (ratePercentage / 12);
+        totalIntereses += interest;
+        totalPagado += annualContributions / 12 + interest;
+      }
+    } else if (tipoInteres === 'mensual' && unidadPeriodo === 'años') {
+      const totalMonths = timePeriod * 12; // Convertir años a meses
+      for (let i = 0; i < totalMonths; i++) {
+        const interest = totalPagado * (ratePercentage);
+        totalIntereses += interest;
+        totalPagado += annualContributions / 12 + interest;
+      }
+    
+    } else if (tipoInteres === 'mensual' && unidadPeriodo === 'meses') {
+      // Caso de interés mensual y período en meses
+      const totalMonths = timePeriod;
+      for (let i = 0; i < totalMonths; i++) {
+        const interest = totalPagado * (ratePercentage );
+        totalIntereses += interest;
+        totalPagado += annualContributions / 12 + interest;
+      }
+    }
+  
+    rendimientoAcumulado = totalPagado - principalAmount;
+  
+    setResult(totalPagado.toFixed(2));
+    setTotalIntereses(totalIntereses.toFixed(2));
+    setTotalPagado(totalPagado.toFixed(2));
+    setRendimientoAcumulado(rendimientoAcumulado.toFixed(2));
+    setGanancia(rendimientoAcumulado.toFixed(2));
+  };
+  
+
+  // Llama a calculateInvestment en useEffect para calcular al renderizar el componente
   useEffect(() => {
     calculateInvestment();
-    
   }, [navigation]);
-
   
-  const volver=()=>{navigation.navigate('Home')}
   
+  const AccesoTabla = () => {
+    const p = parseFloat(principal);
+    const r = parseFloat(rate);
+    const t = parseFloat(time);
+    const c = parseFloat(contributions);
+  
+    const periodo = unidadPeriodo === "años" ? 12 : 1;
+    const n = unidadPeriodo === "años" ? t : t / 12;  // Ajusta el cálculo para meses
+  
+    const periodicRate = tipoInteres === "anual" ? r / 100 : Math.pow(1 + r / 100, 12) - 1;
+  
+    let saldoPendiente = p;
+    let rendimientoTotal = 0;
+    const data = [];
+  
+    for (let i = 1; i <= n; i++) {
+      const interesPeriodo = saldoPendiente * periodicRate;
+      const valorFuturo = saldoPendiente + interesPeriodo + c;
+      const rendimientoPeriodo = valorFuturo - saldoPendiente - c;
+  
+      data.push({
+        periodo: i,
+        saldo: valorFuturo.toFixed(2),
+        rendimientoPeriodo: rendimientoPeriodo.toFixed(2),
+        rendimientoAcumulado: (rendimientoTotal + rendimientoPeriodo).toFixed(2),
+      });
+  
+      rendimientoTotal += rendimientoPeriodo;
+      saldoPendiente = valorFuturo;
+    }
+  
+    // Asegúrate de pasar unidadPeriodo correctamente
+    navigation.navigate("TablaInversion", {
+      data,
+      unidadPeriodo: unidadPeriodo,
+      rendimientoAcumulado,
+      totalIntereses: totalIntereses, // Si es necesario, coloca el valor correcto aquí
+      totalPagado: totalPagado, // Si es necesario, coloca el valor correcto aquí
+    });
+  };
+  
+  const volver = () => {
+    navigation.navigate("Home");
+  };
   return (
     <View>
       <Text style={styles.enunciado}>Datos introducidos</Text>
-    <Text style={styles.labelText}>Capital: <Text style={styles.resultText}>{principal}</Text></Text>
-    <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{rate}%</Text></Text>
-    <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{time} años</Text></Text>
-    <Text style={styles.labelText}>Contribuciones anuales: <Text style={styles.resultText}>{contributions} </Text></Text>
-    <Text style={styles.enunciado}>Resultado</Text>
-    <Text style={styles.labelText}>Valor futuro: <Text style={styles.resultTextr}>{parseFloat(result).toFixed(2)}</Text></Text>
-    <TouchableOpacity
-     onPress={volver}
-     style={styles.touchableButtonV}
-      >
-      <Text style={styles.buttonText}>VOLVER</Text>
+      <Text style={styles.labelText}>
+        Capital: <Text style={styles.resultText}>{principal}</Text>
+      </Text>
+      <Text style={styles.labelText}>
+        Tasa de Interés: <Text style={styles.resultText}>{rate}%</Text>
+      </Text>
+      <Text style={styles.labelText}>
+        Período: <Text style={styles.resultText}>{time} {unidadPeriodo}</Text>
+      </Text>
+      <Text style={styles.labelText}>
+        Contribuciones anuales:{" "}
+        <Text style={styles.resultText}>{contributions} </Text>
+      </Text>
+      <Text style={styles.enunciado}>Resultado</Text>
+      <Text style={styles.labelText}>
+        Valor futuro: <Text style={styles.resultText}>{result}</Text>
+      </Text>
+      <Text style={styles.labelText}>
+        Rendimiento de la inversión: <Text style={styles.resultText}>{ganancia}</Text>
+      </Text>
+
+      <TouchableOpacity onPress={AccesoTabla} style={styles.touchableButton}>
+        <Text style={styles.buttonText}>Acceso a Tabla</Text>
       </TouchableOpacity>
-     </View>
+
+      <TouchableOpacity onPress={volver} style={styles.touchableButtonV}>
+        <Text style={styles.buttonText}>VOLVER</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

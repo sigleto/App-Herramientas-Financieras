@@ -111,7 +111,7 @@ export default function ResultadosPrestamo({ route }) {
   onPress={volver}
   style={styles.touchableButtonV}
 >
-  <Text style={styles.buttonText}>VOLVER</Text>
+  <Text style={styles.buttonTextA}>VOLVER</Text>
 </TouchableOpacity>
     </View>
   );
@@ -150,6 +150,12 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontSize: 24,
+    color: '#f4f8f8',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  buttonTextA: {
+    fontSize: 18,
     color: '#f4f8f8',
     textAlign: 'center',
     fontWeight: 'bold',

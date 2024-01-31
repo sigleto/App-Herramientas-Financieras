@@ -4,48 +4,49 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function ResultadoAhorro({ route }) {
   const navigation = useNavigation();
-  const { meta,tasaInteres,periodo } = route.params;
+  const { meta, tasaInteres, periodo, tipoInteres, unidadPeriodo } = route.params;
   const [ahorroNecesario, setAhorroNecesario] = useState('');
-  
 
   const calcularAhorroNecesario = () => {
     const metaFloat = parseFloat(meta);
-    const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12; // Tasa de interés mensual
-    const periodoFloat = parseFloat(periodo);
+    const tasaInteresFloat = parseFloat(tasaInteres) / 100; // Tasa de interés anual
+    const periodoFloat = parseFloat(periodo) * (unidadPeriodo === 'años' ? 12 : 1); // Ajustar según la unidad de período
+
+    const tasaInteresMensual = tipoInteres === 'anual' ? Math.pow(1 + tasaInteresFloat, 1 / 12) - 1 : tasaInteresFloat;
 
     const ahorroNecesarioCalculado =
       metaFloat /
-      ((Math.pow(1 + tasaInteresFloat, periodoFloat) - 1) / tasaInteresFloat);
+      ((Math.pow(1 + tasaInteresMensual, periodoFloat) - 1) / tasaInteresMensual);
 
     setAhorroNecesario(ahorroNecesarioCalculado.toFixed(2).toString());
   };
 
-
   useEffect(() => {
     calcularAhorroNecesario();
-    
   }, [navigation]);
 
-  
-  const volver=()=>{navigation.navigate('Home')}
-  
+  const volver = () => {
+    navigation.navigate('Home');
+  };
+
   return (
     <View>
       <Text style={styles.enunciado}>Datos introducidos</Text>
-    <Text style={styles.labelText}>Meta de ahorro: <Text style={styles.resultText}>{meta}</Text></Text>
-    <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres} %</Text></Text>
-    <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} meses</Text></Text>
-    <Text style={styles.enunciado}>Resultado</Text>
-    <Text style={styles.labelText}>Ahorro necesario mensual: <Text style={styles.resultTextr}>{parseFloat(ahorroNecesario).toFixed(2)}</Text></Text>
-    <TouchableOpacity
-  onPress={volver}
-  style={styles.touchableButtonV}
->
-  <Text style={styles.buttonText}>VOLVER</Text>
-</TouchableOpacity>
-     </View>
+      <Text style={styles.labelText}>Meta de ahorro: <Text style={styles.resultText}>{meta}</Text></Text>
+      <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres} %</Text></Text>
+      <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} {unidadPeriodo}</Text></Text>
+      <Text style={styles.enunciado}>Resultado</Text>
+      <Text style={styles.labelText}>Ahorro necesario mensual: <Text style={styles.resultText}>{parseFloat(ahorroNecesario).toFixed(2)}</Text></Text>
+      <TouchableOpacity
+        onPress={volver}
+        style={styles.touchableButtonV}
+      >
+        <Text style={styles.buttonText}>VOLVER</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: '#555ff7',
     paddingHorizontal: 27,
-    marginTop: 40,
+    marginTop: -21,
     borderRadius: 10,
   },
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Anuncio from '../Anexos/Anuncio';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 export default function App() {
   const [edadActual, setEdadActual] = useState('');
@@ -26,14 +26,17 @@ export default function App() {
       tasaInteres: tasaInteres,
     });
   };
-
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-9777143216104753/8889863321';
+  const navigateToHerramientas = (ruta) => {
+    navigation.navigate(ruta);
+  };
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.container}>
-        <Anuncio />
+       
         <Text style={styles.label}>Edad actual</Text>
         <TextInput
           style={styles.input}
@@ -82,6 +85,10 @@ export default function App() {
           <Text style={styles.buttonText}>Calcular</Text>
         </TouchableOpacity>
       </View>
+      <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
     </ScrollView>
   );
 }
