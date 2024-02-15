@@ -9,6 +9,7 @@ export default function RentabilidadAcciones() {
   const [cantidad, setCantidad] = useState('');
   const [precioCompra, setPrecioCompra] = useState('');
   const [resultado, setResultado] = useState(null);
+  const [cotizacionActual, setCotizacionActual] = useState(null);
   const [error, setError] = useState(null);
 
   const calcularRentabilidad = async () => {
@@ -20,6 +21,7 @@ export default function RentabilidadAcciones() {
       if (response.data) {
         const stockData = response.data;
         const precioActual = stockData.close; // Cambiar a la propiedad correcta según la respuesta de Marketstack
+        setCotizacionActual(precioActual);
         const cantidadAccion = parseInt(cantidad);
         const inversionTotal = cantidadAccion * parseFloat(precioCompra);
         const valorActual = cantidadAccion * precioActual;
@@ -74,6 +76,12 @@ export default function RentabilidadAcciones() {
       {resultado !== null && (
         <Text style={styles.result}>
           La rentabilidad estimada es: {resultado}
+        </Text>
+      )}
+
+      {cotizacionActual !== null && (
+        <Text style={styles.result}>
+          Cotización actual: {cotizacionActual}
         </Text>
       )}
     </View>

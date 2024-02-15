@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { LineChart } from 'react-native-chart-kit';
 
 export default function ResultadoJubilación({ route }) {
   const navigation = useNavigation();
-  const { edadActual,edadJubilacion,montoActual, tasaInteres } = route.params;
+  const { edadActual, edadJubilacion, montoActual, tasaInteres } = route.params;
   const [resultado, setResultado] = useState(null);
 
-  
-
- 
-
-    const calcularJubilacion = () => {
-       
-        const tiempoRestante = edadJubilacion - edadActual;
-        const montoFinal = montoActual * Math.pow((1 + tasaInteres / 100), tiempoRestante);
-    
-        setResultado({montoFinal});
-        
-      };
-      
-     
+  const calcularJubilacion = () => {
+    const tiempoRestante = edadJubilacion - edadActual;
+    const montoFinal = montoActual * Math.pow((1 + tasaInteres / 100), tiempoRestante);
+    setResultado({ montoFinal });
+  };
 
   useEffect(() => {
     calcularJubilacion();
@@ -33,58 +25,78 @@ export default function ResultadoJubilación({ route }) {
     });
   }, [navigation]);
 
-  const DiasJubilacion=()=>{navigation.navigate('DiasJubilacion')}
+  const DiasJubilacion = () => {
+    navigation.navigate('DiasJubilacion');
+  };
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={DiasJubilacion}>
-          <Text style={styles.buttonText}>Cuanto falta para jubilarte</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation, DiasJubilacion]);
-
+  const volver = () => {
+    navigation.navigate('Home');
+  };
   
-  const volver=()=>{navigation.navigate('Home')}
+//Datos gráfico
+  const edadActualn = parseFloat(edadActual);
+  const edadJubilacionn = parseFloat(edadJubilacion);
+
+  const labels = [];
+  for (let i = edadActualn; i <= edadJubilacionn; i += 5) {
+    labels.push(i.toString());
+  }
+
   return (
     <View>
       <Text style={styles.enunciado}>Datos introducidos</Text>
-
-    <Text style={styles.labelText}>Edad actual: <Text style={styles.resultText}>{edadActual} años</Text></Text>
-    <Text style={styles.labelText}>Edad de jubilación: <Text style={styles.resultText}>{edadJubilacion} años</Text></Text>
-    <Text style={styles.labelText}>Ahorros actuales: <Text style={styles.resultText}>{montoActual} </Text></Text>
-    <Text style={styles.labelText}>Tasa de interés anual: <Text style={styles.resultText}>{tasaInteres} %</Text></Text>
-    
+      <Text style={styles.labelText}>Edad actual: <Text style={styles.resultText}>{edadActual} años</Text></Text>
+      <Text style={styles.labelText}>Edad de jubilación: <Text style={styles.resultText}>{edadJubilacion} años</Text></Text>
+      <Text style={styles.labelText}>Ahorros actuales: <Text style={styles.resultText}>{montoActual} </Text></Text>
+      <Text style={styles.labelText}>Tasa de interés anual: <Text style={styles.resultText}>{tasaInteres} %</Text></Text>
       <Text style={styles.enunciado}>Resultados</Text>
-    
-      <Text style={styles.labelText}>
-  El monto estimado para la jubilación es:{" "}
-  <Text style={styles.resultTextr}>
-    {resultado && resultado.montoFinal
-      ? parseFloat(resultado.montoFinal).toFixed(2)
-      : "No disponible"}
-  </Text>
-</Text>
-
-
-      <TouchableOpacity
-  onPress={DiasJubilacion}
-  style={styles.touchableButton}
->
-  <Text style={styles.buttonText}>Cuanto falta para jubilarte</Text>
-</TouchableOpacity>
-
-<TouchableOpacity
-  onPress={volver}
-  style={styles.touchableButtonV}
->
-  <Text style={styles.buttonTextV}>VOLVER</Text>
-</TouchableOpacity>
-
+      <Text style={styles.labelText}> El monto estimado para la jubilación es:{" "} <Text style={styles.resultTextr}> {resultado && resultado.montoFinal ? parseFloat(resultado.montoFinal).toFixed(2) : "No disponible"} </Text> </Text>
+      {/* Gráfico de rendimiento */}
+      <Text style={styles.enunciado}>Gráfico de rendimiento</Text>
+      <LineChart
+        data={{
+          labels,
+          datasets: [{
+            data: Array.from({ length: edadJubilacion - edadActual + 1 }, (_, i) => montoActual * Math.pow((1 + tasaInteres / 100), i)),
+          }],
+        }}
+        xAxisInterval={5}
+        width={Dimensions.get('window').width - 40}
+        height={220}
+        yAxisLabel="$"
+        yAxisSuffix=""
+        xLabelsOffset={-10}
+        chartConfig={{
+          backgroundColor: '#ffffff',
+          backgroundGradientFrom: '#ffffff',
+          backgroundGradientTo: '#ffffff',
+          decimalPlaces: 2,
+          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          style: { borderRadius: 16 },
+          propsForDots: { r: '6', strokeWidth: '2', stroke: '#ffa726' },
+          xLabelRotation: 45,
+          yLabelsOffset: -10,
+          xLabel: 'Años',
+          yLabel: 'Dinero',
+          propsForHorizontalLabels: { fontSize: 12 },
+        }}
+        bezier
+        style={{ marginVertical: 8, borderRadius: 16 }}
+        formatLabel={label => label.toString()}
+      />
+      <TouchableOpacity onPress={DiasJubilacion} style={styles.touchableButton}>
+        <Text style={styles.buttonText}>Cuanto falta para jubilarte</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={volver} style={styles.touchableButtonV}>
+        <Text style={styles.buttonTextV}>VOLVER</Text>
+      </TouchableOpacity>
     </View>
   );
-}
+};
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,13 +146,13 @@ const styles = StyleSheet.create({
   },
 
   enunciado: {
-    marginTop: 40,
-    fontSize: 25,
+    marginTop: 4,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#28a745',
     textAlign: 'center',
     fontWeight: 'bold',
-    marginBottom:40,
+    marginBottom:20,
   },
 
   label: {
