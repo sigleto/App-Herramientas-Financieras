@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 export default function ResultadoInversiones({ route }) {
   const navigation = useNavigation();
@@ -13,7 +14,7 @@ export default function ResultadoInversiones({ route }) {
   const [totalPagado, setTotalPagado] = useState(""); 
   const [rendimientoAcumulado, setRendimientoAcumulado] = useState("");
   const [ganancia,setGanancia]=useState('')
- 
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
   const calculateInvestment = () => {
     const principalAmount = parseFloat(principal);
     const ratePercentage = parseFloat(rate) / 100;
@@ -148,6 +149,10 @@ export default function ResultadoInversiones({ route }) {
       <TouchableOpacity onPress={volver} style={styles.touchableButtonV}>
         <Text style={styles.buttonText}>VOLVER</Text>
       </TouchableOpacity>
+      <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
     </View>
   );
 }

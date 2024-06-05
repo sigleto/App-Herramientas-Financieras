@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView,KeyboardAvoidingView } from 'react-native'; // Importa ScrollView para manejar la visualización en pantallas pequeñas
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Input } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-import { Picker } from '@react-native-picker/picker';
+import { Picker} from '@react-native-picker/picker';
 
 export default function CalculadoraAhorros() {
   const [meta, setMeta] = useState('');
   const [tasaInteres, setTasaInteres] = useState('');
   const [periodo, setPeriodo] = useState('');
   const [tipoInteres, setTipoInteres] = useState('anual');
-  const [unidadPeriodo, setUnidadPeriodo] = useState('meses');
   const navigation = useNavigation();
 
   const calcularCuota = () => {
@@ -22,12 +21,11 @@ export default function CalculadoraAhorros() {
         tasaInteres: tasaInteres,
         periodo: periodo,
         tipoInteres: tipoInteres,
-        unidadPeriodo: unidadPeriodo,
       });
     }
   };
 
-  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-9777143216104753/8889863321';
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
   const navigateToHerramientas = (ruta) => {
     navigation.navigate(ruta);
   };
@@ -35,50 +33,48 @@ export default function CalculadoraAhorros() {
 
   return (
     <KeyboardAvoidingView
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    style={{ flex: 1 }}
-  >
-    <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Meta de ahorro</Text>
-       
-        <Input
-          keyboardType="numeric"
-          inputStyle={{ fontSize: 20, color: 'olive' }}
-          style={styles.input}
-          onChangeText={(text) => setMeta(text)}
-          autoFocus={true}
-        />
-      </View>
-
-      <View style={styles.rowContainer}>
-        <View style={styles.halfContainer}>
-          <Text style={styles.label}>Tasa de interés (%)</Text>
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Meta de ahorro</Text>
           <Input
             keyboardType="numeric"
-            style={styles.input}
             inputStyle={{ fontSize: 20, color: 'olive' }}
-            value={tasaInteres}
-            onChangeText={(text) => setTasaInteres(text)}
+            style={styles.input}
+            onChangeText={(text) => setMeta(text)}
+            autoFocus={true}
           />
         </View>
 
-        <View style={styles.halfContainer}>
-          <Text style={styles.label}>Tipo de interés</Text>
-          <Picker
-            selectedValue={tipoInteres}
-            style={styles.picker}
-            onValueChange={(itemValue) => setTipoInteres(itemValue)}
-          >
-            <Picker.Item label="Anual" value="anual" />
-            <Picker.Item label="Mensual" value="mensual" />
-          </Picker>
-        </View>
-      </View>
+        <View style={styles.rowContainer}>
+          <View style={styles.halfContainer}>
+            <Text style={styles.label}>Tasa de interés (%)</Text>
+            <Input
+              keyboardType="numeric"
+              style={styles.input}
+              inputStyle={{ fontSize: 20, color: 'olive' }}
+              value={tasaInteres}
+              onChangeText={(text) => setTasaInteres(text)}
+            />
+          </View>
 
-      <View style={styles.rowContainer}>
-        <View style={styles.halfContainer}>
-          <Text style={styles.label}>Período</Text>
+          <View style={styles.halfContainer}>
+            <Text style={styles.label}>Tipo de interés</Text>
+            <Picker
+              selectedValue={tipoInteres}
+              style={styles.picker}
+              onValueChange={(itemValue) => setTipoInteres(itemValue)}
+            >
+              <Picker.Item label="Anual" value="anual" />
+              <Picker.Item label="Mensual" value="mensual" />
+            </Picker>
+          </View>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Período (años)</Text>
           <Input
             keyboardType="numeric"
             style={styles.input}
@@ -88,27 +84,14 @@ export default function CalculadoraAhorros() {
           />
         </View>
 
-        <View style={styles.halfContainer}>
-          <Text style={styles.label}>Unidad de período</Text>
-          <Picker
-            selectedValue={unidadPeriodo}
-            style={styles.picker}
-            onValueChange={(itemValue) => setUnidadPeriodo(itemValue)}
-          >
-            <Picker.Item label="Meses" value="meses" />
-            <Picker.Item label="Años" value="años" />
-          </Picker>
-        </View>
-      </View>
-
-      <TouchableOpacity onPress={calcularCuota} style={styles.touchableButton}>
-        <Text style={styles.buttonText}>Calcular Ahorro Necesario</Text>
-      </TouchableOpacity>
-    </ScrollView>
-    <BannerAd
-      unitId={adUnitId}
-      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-    />
+        <TouchableOpacity onPress={calcularCuota} style={styles.touchableButton}>
+          <Text style={styles.buttonText}>Calcular Ahorro Necesario</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
     </KeyboardAvoidingView>
   );
 }

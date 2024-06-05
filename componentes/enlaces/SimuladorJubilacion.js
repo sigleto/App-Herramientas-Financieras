@@ -10,7 +10,7 @@ export default function App() {
   const [tasaInteres, setTasaInteres] = useState('');
 
   const navigation = useNavigation();
-
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
   const calcularJubilacion = () => {
     // Validar si algún campo está vacío
     if (!edadActual || !edadJubilacion || !montoActual || !tasaInteres) {
@@ -26,7 +26,7 @@ export default function App() {
       tasaInteres: tasaInteres,
     });
   };
-  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-9777143216104753/8889863321';
+ 
   const navigateToHerramientas = (ruta) => {
     navigation.navigate(ruta);
   };

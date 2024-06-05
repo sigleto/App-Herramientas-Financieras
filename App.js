@@ -34,7 +34,7 @@ const App = ({navigation}) => {
             component={PoliticaPrivacidad}
             options={{
               drawerIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="home" size={size} color={color} />
+                <MaterialCommunityIcons name="shield-account" size={size} color={color} />
               ), drawerLabelStyle: {
                 fontSize: 20,
               }
@@ -45,7 +45,7 @@ const App = ({navigation}) => {
             component={DescargoResponsabilidad}
             options={{
               drawerIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="home" size={size} color={color} />
+                <MaterialCommunityIcons name="alert-circle-outline" size={size} color={color} />
               ), drawerLabelStyle: {
                 fontSize: 20,
               }

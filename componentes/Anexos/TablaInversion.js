@@ -14,7 +14,7 @@ export default function TablaInversion({ route }) {
 
   return (
     <View style={styles.container}>
-      <Anuncio />
+     <Anuncio />
       <TouchableOpacity
         onPress={volver}
         style={styles.touchableButtonV}

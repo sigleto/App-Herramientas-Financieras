@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 export default function ResultadosPrestamo({ route }) {
   const navigation = useNavigation();
@@ -8,7 +9,7 @@ export default function ResultadosPrestamo({ route }) {
   const [cuota, setCuota] = useState("");
   const [totalIntereses, setTotalIntereses] = useState("");
   const [totalPagado, setTotalPagado] = useState("");
-
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
   const calculandoFunc = () => {
     const capitalFloat = parseFloat(capital);
     const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12;
@@ -113,6 +114,10 @@ export default function ResultadosPrestamo({ route }) {
 >
   <Text style={styles.buttonTextA}>VOLVER</Text>
 </TouchableOpacity>
+<BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
     </View>
   );
 }

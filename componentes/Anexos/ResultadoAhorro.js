@@ -2,34 +2,26 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 export default function ResultadoAhorro({ route }) {
   const navigation = useNavigation();
   const { meta, tasaInteres, periodo, tipoInteres, unidadPeriodo } = route.params;
   const [ahorroNecesario, setAhorroNecesario] = useState('');
-
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
   const calcularAhorroNecesario = () => {
     const metaFloat = parseFloat(meta);
     const tasaInteresFloat = parseFloat(tasaInteres) / 100; // Tasa de interés anual
-    const periodoFloat = parseFloat(periodo) * (unidadPeriodo === 'años' ? 12 : 1); // Ajustar según la unidad de período
-  
-    console.log('Meta:', metaFloat);
-    console.log('Tasa de Interés:', tasaInteresFloat);
-    console.log('Período:', periodoFloat);
-  
+    const periodoFloat = parseFloat(periodo); // Periodo en años
+
     const tasaInteresMensual = tipoInteres === 'anual' ? Math.pow(1 + tasaInteresFloat, 1 / 12) - 1 : tasaInteresFloat;
-  
-    console.log('Tasa de Interés Mensual:', tasaInteresMensual);
-  
+
     const ahorroNecesarioCalculado =
       metaFloat /
-      ((Math.pow(1 + tasaInteresMensual, periodoFloat) - 1) / tasaInteresMensual);
-  
-    console.log('Ahorro Necesario Calculado:', ahorroNecesarioCalculado);
-    setAhorroNecesario(isNaN(ahorroNecesarioCalculado) ? '0' : ahorroNecesarioCalculado.toFixed(2).toString());
+      ((Math.pow(1 + tasaInteresMensual, periodoFloat * 12) - 1) / tasaInteresMensual);
 
+    setAhorroNecesario(isNaN(ahorroNecesarioCalculado) ? '0' : ahorroNecesarioCalculado.toFixed(2).toString());
   };
-  
 
   useEffect(() => {
     calcularAhorroNecesario();
@@ -110,6 +102,10 @@ export default function ResultadoAhorro({ route }) {
       >
         <Text style={styles.buttonText}>VOLVER</Text>
       </TouchableOpacity>
+      <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
     </View>
   );
 }
@@ -153,7 +149,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: '#555ff7',
     paddingHorizontal:5,
-    marginTop: 100,
+   
     borderRadius: 10,
     alignSelf: 'center',
   },

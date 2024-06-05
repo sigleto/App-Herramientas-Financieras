@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from 'react-native-chart-kit';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+
 
 export default function ResultadoJubilación({ route }) {
   const navigation = useNavigation();
   const { edadActual, edadJubilacion, montoActual, tasaInteres } = route.params;
   const [resultado, setResultado] = useState(null);
-
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
   const calcularJubilacion = () => {
     const tiempoRestante = edadJubilacion - edadActual;
     const montoFinal = montoActual * Math.pow((1 + tasaInteres / 100), tiempoRestante);
@@ -91,6 +93,10 @@ export default function ResultadoJubilación({ route }) {
       <TouchableOpacity onPress={volver} style={styles.touchableButtonV}>
         <Text style={styles.buttonTextV}>VOLVER</Text>
       </TouchableOpacity>
+      <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
     </View>
   );
 };

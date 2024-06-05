@@ -6,7 +6,7 @@ import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 
 const Herramientas = () => {
   const navigation = useNavigation();
-  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-9777143216104753/8889863321';
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
   const navigateToHerramientas = (ruta) => {
     navigation.navigate(ruta);
   };

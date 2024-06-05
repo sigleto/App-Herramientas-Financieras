@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import Anuncio from '../Anexos/Anuncio';
 import { useNavigation } from '@react-navigation/native';
 
-const API_KEY = '45993|fRCxvDuwsLMfBDy3TpdU'; // Clave de la API de cambio.today
+const API_KEY = '979f1efb1d7447ae80c6eacd42c684e6'; // Clave de la API de openexhangerate
 const monedas = [
   { codigo: 'USD', nombre: 'Dólar estadounidense' },
   { codigo: 'EUR', nombre: 'Euro' },
@@ -58,18 +58,23 @@ export default function ConversorDivisas() {
   const [cantidadIntroducida, setCantidadIntroducida] = useState('');
   const [mensajeEstado, setMensajeEstado] = useState('');
 
-  
+  const API_KEY = 'd93ad7934d4b03cf5de6577a';
+
   const obtenerTipoCambio = async () => {
     try {
       const response = await fetch(
-        `https://api.cambio.today/v1/quotes/${monedaOrigen}/${monedaDestino}/json?quantity=${cantidadIntroducida}&key=${API_KEY}`
+        `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${monedaOrigen}`
       );
       const data = await response.json();
 
-      if (response.ok && data.status === 'OK') {
-        const tasaCambio = data.result.value;
-        setTipoCambio(tasaCambio.toString());
-        setMensajeEstado(`Cantidad introducida: ${cantidadIntroducida} ${monedaOrigen}`);
+      if (response.ok) {
+        if (data && data.conversion_rates && data.conversion_rates[monedaDestino]) {
+          const tasaCambio = data.conversion_rates[monedaDestino];
+          setTipoCambio(tasaCambio.toString());
+          setMensajeEstado(`Cantidad introducida: ${cantidadIntroducida} ${monedaOrigen}`);
+        } else {
+          console.error('Error: La moneda de origen o destino no está disponible.');
+        }
       } else {
         console.error('Error al obtener el tipo de cambio');
       }
@@ -88,11 +93,14 @@ export default function ConversorDivisas() {
     setMostrarPantallaNumeros(false);
   };
 
-  const navigation=useNavigation()
-  const volver=()=>{navigation.navigate('Home')}
+  const navigation = useNavigation();
+  const volver = () => {
+    navigation.navigate('Home');
+  };
+
   return (
     <View style={styles.container}>
-      <Anuncio />
+       <Anuncio />
       {/* Cantidad a convertir */}
       {mostrarPantallaNumeros && (
         <>
@@ -155,12 +163,12 @@ export default function ConversorDivisas() {
         </Text>
       )}
 
-<TouchableOpacity
-  onPress={volver}
-  style={styles.touchableButtonV}
->
-  <Text style={styles.buttonTextV}>VOLVER</Text>
-</TouchableOpacity>
+      <TouchableOpacity
+        onPress={volver}
+        style={styles.touchableButtonV}
+      >
+        <Text style={styles.buttonTextV}>VOLVER</Text>
+      </TouchableOpacity>
     </View>
   );
 }
