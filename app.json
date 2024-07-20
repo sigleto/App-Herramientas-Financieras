@@ -10,7 +10,7 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
-      "accessibilityLabel":"Cargando aplicación"
+      "accessibilityLabel": "Cargando aplicación"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -23,9 +23,11 @@
         "foregroundImage": "./assets/Icono.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["com.google.android.gms.permission.AD_ID"],
+      "permissions": [
+        "com.google.android.gms.permission.AD_ID"
+      ],
       "package": "com.sigleto.Herramientas_financieras",
-      "versionCode": 14 
+      "versionCode": 15
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,10 +36,12 @@
       "eas": {
         "projectId": "b6d0bcac-93ac-42ce-ae55-2201b15409c4"
       }
-    }
+    },
+    "plugins": [
+      "react-native-google-mobile-ads"
+    ]
   },
   "react-native-google-mobile-ads": {
     "android_app_id": "ca-app-pub-6921150380725872~3264410205"
-    
   }
 }
