@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import axios from 'axios';
+import Anuncio from '../Anexos/Anuncio';
+import { useNavigation } from '@react-navigation/native';
 
-// Accede a la variable de entorno
+
 const MARKETSTACK_API_ACCESS_KEY = process.env.MARKETSTACK_API_ACCESS_KEY;
 
 export default function RentabilidadAcciones() {
@@ -21,14 +23,14 @@ export default function RentabilidadAcciones() {
 
       if (response.data) {
         const stockData = response.data;
-        const precioActual = stockData.close; // Cambiar a la propiedad correcta según la respuesta de Marketstack
+        const precioActual = stockData.close;
         setCotizacionActual(precioActual);
         const cantidadAccion = parseInt(cantidad);
         const inversionTotal = cantidadAccion * parseFloat(precioCompra);
         const valorActual = cantidadAccion * precioActual;
         const rentabilidad = valorActual - inversionTotal;
         setResultado(rentabilidad.toFixed(2).toString());
-        setError(null); // Limpiar mensaje de error si existía previamente
+        setError(null);
       } else {
         setError('El símbolo de la acción no existe.');
       }
@@ -37,10 +39,14 @@ export default function RentabilidadAcciones() {
       setError('Error al obtener datos de la acción');
     }
   };
-
+  const navigation = useNavigation();
+  const volver = () => {
+    navigation.navigate('Home');
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Simulador de Rentabilidad de Acciones</Text>
+      <Anuncio />
 
       <TextInput
         style={styles.input}
@@ -65,25 +71,27 @@ export default function RentabilidadAcciones() {
         onChangeText={(text) => setPrecioCompra(text)}
       />
 
-      <Button title="Calcular Rentabilidad" onPress={calcularRentabilidad} />
+      <TouchableOpacity style={styles.button} onPress={calcularRentabilidad}>
+        <Text style={styles.buttonText}>Calcular Rentabilidad</Text>
+      </TouchableOpacity>
 
-      {error && (
-        <Text style={styles.error}>
-          {error}
-        </Text>
-      )}
+      {error && <Text style={styles.error}>{error}</Text>}
 
       {resultado !== null && (
-        <Text style={styles.result}>
-          La rentabilidad estimada es: {resultado}
-        </Text>
+        <Text style={styles.result}>La rentabilidad estimada es: {resultado}</Text>
       )}
 
       {cotizacionActual !== null && (
-        <Text style={styles.result}>
-          Cotización actual: {cotizacionActual}
-        </Text>
+        <Text style={styles.result}>Cotización actual: {cotizacionActual}</Text>
       )}
+
+    
+        <TouchableOpacity
+        onPress={volver}
+        style={styles.touchableButtonV}
+      >
+        <Text style={styles.buttonTextV}>VOLVER</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -94,27 +102,61 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
+    backgroundColor: '#f4f4f8', // Fondo claro
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#333',
+    marginBottom: 30,
+    textAlign: 'center',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#ddd',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    borderRadius: 8,
+    marginBottom: 15,
+    paddingHorizontal: 15,
     width: '100%',
+    fontSize:24,
+    textAlign:"center",
+    backgroundColor:'#f1d84a'
+  },
+  button: {
+    backgroundColor: '#4a90e2', // Azul personalizado
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   result: {
     marginTop: 20,
     fontSize: 18,
+    color: '#4a90e2',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   error: {
     marginTop: 20,
     fontSize: 16,
     color: 'red',
+    textAlign: 'center',
+  },
+  touchableButtonV: {
+    marginVertical: 10,
+    backgroundColor: '#555ff7',
+    paddingHorizontal: 27,
+    marginTop: 20,
+  },
+  buttonTextV: {
+    fontSize: 22,
+    color: '#f4f8f8',
   },
 });

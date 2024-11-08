@@ -1,11 +1,12 @@
-import React, { useState,useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import Anuncio from '../Anexos/Anuncio';
 import { useNavigation } from '@react-navigation/native';
 
-const API_KEY = '979f1efb1d7447ae80c6eacd42c684e6'; // Clave de la API de openexhangerate
+const API_KEY = process.env.API_KEY;
+
 const monedas = [
   { codigo: 'USD', nombre: 'Dólar estadounidense' },
   { codigo: 'EUR', nombre: 'Euro' },
@@ -57,8 +58,7 @@ export default function ConversorDivisas() {
   const [mostrarPantallaNumeros, setMostrarPantallaNumeros] = useState(true);
   const [cantidadIntroducida, setCantidadIntroducida] = useState('');
   const [mensajeEstado, setMensajeEstado] = useState('');
-
-  const API_KEY = 'd93ad7934d4b03cf5de6577a';
+  const [error, setError] = useState('');
 
   const obtenerTipoCambio = async () => {
     try {
@@ -72,18 +72,25 @@ export default function ConversorDivisas() {
           const tasaCambio = data.conversion_rates[monedaDestino];
           setTipoCambio(tasaCambio.toString());
           setMensajeEstado(`Cantidad introducida: ${cantidadIntroducida} ${monedaOrigen}`);
+          setError(''); // Limpiar cualquier error previo
         } else {
-          console.error('Error: La moneda de origen o destino no está disponible.');
+          setError('Error: La moneda de origen o destino no está disponible.');
         }
       } else {
-        console.error('Error al obtener el tipo de cambio');
+        setError('Error al obtener el tipo de cambio');
       }
     } catch (error) {
-      console.error('Error en la solicitud de tipo de cambio:', error);
+      setError('Error en la solicitud de tipo de cambio');
     }
   };
 
   const convertirDivisas = () => {
+    if (tipoCambio === '') {
+      setError('Primero debes obtener el tipo de cambio');
+      return;
+    }
+    
+    setError(''); // Limpiar el mensaje de error si existe
     const cantidadFloat = parseFloat(cantidadIntroducida);
     const resultadoCalculado = cantidadFloat * parseFloat(tipoCambio);
     setResultado(resultadoCalculado.toFixed(2).toString());
@@ -100,8 +107,7 @@ export default function ConversorDivisas() {
 
   return (
     <View style={styles.container}>
-       <Anuncio />
-      {/* Cantidad a convertir */}
+      <Anuncio />
       {mostrarPantallaNumeros && (
         <>
           <Text style={styles.label}>Cantidad a convertir</Text>
@@ -115,7 +121,6 @@ export default function ConversorDivisas() {
           />
         </>
       )}
-      {/* Moneda de origen */}
       <Text style={styles.label}>Moneda de origen</Text>
       <Picker
         style={{ height: 50, width: 200 }}
@@ -127,7 +132,6 @@ export default function ConversorDivisas() {
         ))}
       </Picker>
 
-      {/* Moneda de destino */}
       <Text style={styles.label}>Moneda de destino</Text>
       <Picker
         style={{ height: 50, width: 200 }}
@@ -139,21 +143,22 @@ export default function ConversorDivisas() {
         ))}
       </Picker>
 
-      {/* Obtener Tipo de Cambio */}
-      <TouchableOpacity onPress={() => { obtenerTipoCambio(); ocultarPantallaNumeros(); }} style={styles.touchableButton}>
+      <TouchableOpacity onPress={() => { obtenerTipoCambio(); }} style={styles.touchableButton}>
         <Text style={styles.buttonText}>Obtener Tipo de Cambio</Text>
       </TouchableOpacity>
       {tipoCambio !== '' && (
-      <View>
-        <Text style={styles.resultText}>{mensajeEstado}</Text>
-        <Text style={styles.resultText}>
-        
-          Tipo de Cambio: 1 {monedaOrigen} = {tipoCambio} {monedaDestino}
-        </Text>
+        <View>
+          <Text style={styles.resultText}>{mensajeEstado}</Text>
+          <Text style={styles.resultText}>
+            Tipo de Cambio: 1 {monedaOrigen} = {tipoCambio} {monedaDestino}
+          </Text>
         </View>
       )}
       
-      {/* Convertir */}
+      {error !== '' && (
+        <Text style={styles.errorText}>{error}</Text>
+      )}
+
       <TouchableOpacity onPress={convertirDivisas} style={styles.touchableButton}>
         <Text style={styles.buttonText}>Convertir</Text>
       </TouchableOpacity>
@@ -210,13 +215,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
   },
-   touchableButtonV: {
+  touchableButtonV: {
     marginVertical: 10,
     backgroundColor: 'olive',
-    paddingHorizontal:5,
+    paddingHorizontal: 5,
     marginTop: 25,
     borderRadius: 10,
     alignSelf: 'center',
-
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
   },
 });
