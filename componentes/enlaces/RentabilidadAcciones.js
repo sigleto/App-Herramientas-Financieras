@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-const MARKETSTACK_API_ACCESS_KEY = 'c555cb6dffff4419dc2ecd0c24770476'; // Reemplaza con tu clave de API de Marketstack
+// Accede a la variable de entorno
+const MARKETSTACK_API_ACCESS_KEY = process.env.MARKETSTACK_API_ACCESS_KEY;
 
 export default function RentabilidadAcciones() {
   const [symbol, setSymbol] = useState('');
@@ -15,7 +16,7 @@ export default function RentabilidadAcciones() {
   const calcularRentabilidad = async () => {
     try {
       const response = await axios.get(
-        `http://api.marketstack.com/v1/tickers/${symbol}/eod/latest?access_key=${MARKETSTACK_API_ACCESS_KEY}&exchange=MADRID`
+        `http://api.marketstack.com/v1/tickers/${symbol}/eod/latest?access_key=${MARKETSTACK_API_ACCESS_KEY}&exchange=XNYS`
       );
 
       if (response.data) {
@@ -26,7 +27,6 @@ export default function RentabilidadAcciones() {
         const inversionTotal = cantidadAccion * parseFloat(precioCompra);
         const valorActual = cantidadAccion * precioActual;
         const rentabilidad = valorActual - inversionTotal;
-        console.log(precioActual);
         setResultado(rentabilidad.toFixed(2).toString());
         setError(null); // Limpiar mensaje de error si existía previamente
       } else {

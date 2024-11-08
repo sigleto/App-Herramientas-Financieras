@@ -27,7 +27,7 @@
         "com.google.android.gms.permission.AD_ID"
       ],
       "package": "com.sigleto.Herramientas_financieras",
-      "versionCode": 15
+      "versionCode": 17
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,10 +38,13 @@
       }
     },
     "plugins": [
-      "react-native-google-mobile-ads"
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-6921150380725872~3264410205"
+          
+        }
+      ]
     ]
-  },
-  "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-6921150380725872~3264410205"
   }
 }

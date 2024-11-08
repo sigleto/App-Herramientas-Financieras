@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import Anuncio from './Anuncio';
 
 export default function ResultadoAhorro({ route }) {
   const navigation = useNavigation();
@@ -56,6 +57,7 @@ export default function ResultadoAhorro({ route }) {
   
   return (
     <View style={styles.container}>
+      <Anuncio/>
       <Text style={styles.enunciado}>Datos introducidos</Text>
       <Text style={styles.labelText}>Meta de ahorro: <Text style={styles.resultText}>{meta}</Text></Text>
       <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres} %</Text></Text>
@@ -148,9 +150,15 @@ const styles = StyleSheet.create({
   touchableButtonV: {
     marginVertical: 10,
     backgroundColor: '#555ff7',
-    paddingHorizontal:5,
+    paddingHorizontal:20,
    
     borderRadius: 10,
     alignSelf: 'center',
+  },
+  buttonText: {
+    fontSize: 24,
+    color: '#f4f8f8',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });

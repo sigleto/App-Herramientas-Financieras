@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Input } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
@@ -127,12 +127,15 @@ const styles = StyleSheet.create({
   touchableButton: {
     marginVertical: 10,
     backgroundColor: '#555ff7',
-    paddingHorizontal: 27,
+    paddingHorizontal: 110,
     marginTop: 5,
+    width:'95%',
+    borderRadius:10,
   },
   buttonText: {
-    fontSize: 22,
+    fontSize: 23,
     color: '#f4f8f8',
+    textAlign:'center'
   },
   label: {
     fontWeight: "bold",

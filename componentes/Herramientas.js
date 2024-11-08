@@ -16,6 +16,7 @@ const Herramientas = () => {
     { nombre: 'CALCULADORA DE AHORROS', ruta: 'Ahorros' },
     { nombre: 'CALCULADORA DE INVERSIONES', ruta: 'CalculadoraInversiones' },
     { nombre: 'CONVERSOR DE DIVISAS', ruta: 'Divisa' },
+    {nombre: 'COTIZACIÓN DE ACCIONES NY', ruta: 'Acciones'},
     { nombre: 'RENDIMIENTO PARA LA JUBILACIÓN', ruta: 'Jubilacion' },
     
     

@@ -32,10 +32,7 @@ export default function CalculadoraPrestamos() {
   return (
     <ScrollView>
     <View style={styles.container}>
-    <BannerAd
-      unitId={adUnitId}
-      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-    />
+   
       <Text style={styles.labelA}>Calculadora de Préstamos</Text>
       <View style={styles.inputContainer}>
         <View style={styles.labelContainer}>
@@ -77,6 +74,10 @@ export default function CalculadoraPrestamos() {
       </TouchableOpacity>
      
     </View>
+    <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
     </ScrollView>
   );
 }
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
     backgroundColor: '#fffbde',
+    marginTop:60,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -113,13 +115,17 @@ const styles = StyleSheet.create({
   },
   touchableButton: {
     backgroundColor: '#555ff7',
-    paddingHorizontal: 27,
-    marginTop: 2,
-    borderRadius:10
-  },
+    paddingHorizontal: 130, // Aumenta el valor para hacer el botón más ancho
+    marginTop: 30,
+    borderRadius: 10,
+    width: '95%', // Añade un ancho específico para reducir la estrechez
+    alignSelf: 'center', // Alinea el botón en el centro
+    marginBottom:60,
+},
+
   buttonText: {
     
-    fontSize: 22,
+    fontSize: 25,
     color: '#f4f8f8',
     textAlign: 'center',
     

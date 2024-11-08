@@ -36,12 +36,13 @@ const CalculadoraInversiones = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}>
-         <BannerAd
+        
+     
+      <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container}>
+      <BannerAd
       unitId={adUnitId}
       size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
     />
-     
-      <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container}>
         <Text style={styles.labelA}>Calculadora de Inversiones</Text>
         
 
@@ -164,13 +165,15 @@ const styles = StyleSheet.create({
     paddingVertical: 5, // Espaciado vertical para mejorar la apariencia
   },
   touchableButton: {
+    marginVertical: 10,
     backgroundColor: '#555ff7',
-    paddingHorizontal: 27,
-    marginTop: 20,
-    borderRadius: 10,
+    paddingHorizontal: 110,
+    marginTop: 5,
+    width:'95%',
+    borderRadius:10,
   },
   buttonText: {
-    fontSize: 22,
+    fontSize: 25,
     color: '#f4f8f8',
     textAlign: 'center',
   },

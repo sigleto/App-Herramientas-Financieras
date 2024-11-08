@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-nati
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from 'react-native-chart-kit';
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-
+import Anuncio from './Anuncio';
 
 export default function ResultadoJubilación({ route }) {
   const navigation = useNavigation();
@@ -46,6 +46,7 @@ export default function ResultadoJubilación({ route }) {
 
   return (
     <View>
+    <Anuncio/>
       <Text style={styles.enunciado}>Datos introducidos</Text>
       <Text style={styles.labelText}>Edad actual: <Text style={styles.resultText}>{edadActual} años</Text></Text>
       <Text style={styles.labelText}>Edad de jubilación: <Text style={styles.resultText}>{edadJubilacion} años</Text></Text>
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
 
   },
    buttonTextV: {
-    fontSize: 15,
+    fontSize: 25,
     color: 'white',
   },
 });

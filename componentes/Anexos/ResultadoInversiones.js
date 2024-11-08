@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import Anuncio from './Anuncio'
+
 
 export default function ResultadoInversiones({ route }) {
   const navigation = useNavigation();
@@ -120,6 +122,7 @@ export default function ResultadoInversiones({ route }) {
   };
   return (
     <View>
+      <Anuncio/>
       <Text style={styles.enunciado}>Datos introducidos</Text>
       <Text style={styles.labelText}>
         Capital: <Text style={styles.resultText}>{principal}</Text>

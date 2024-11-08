@@ -6,39 +6,38 @@ import { useNavigation } from "@react-navigation/native";
 export default function TablaInversion({ route }) {
   const navigation = useNavigation();
   const data = route.params.data || [];
- 
-
 
   const volver = () => {
-    navigation.navigate('Home')}
+    navigation.navigate('Home');
+  };
 
   return (
     <View style={styles.container}>
-     <Anuncio />
+      <Anuncio />
+      <View style={styles.header}>
+        <Text style={styles.columnHeader}>Periodo (Años)</Text>
+        <Text style={styles.columnHeader}>Saldo</Text>
+        <Text style={styles.columnHeader}>Rendimiento Periodo</Text>
+        <Text style={styles.columnHeader}>Rendimiento Acumulado</Text>
+      </View>
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.periodo.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.row}>
+            <Text style={styles.column}>{item.periodo}</Text>
+            <Text style={styles.column}>{item.saldo}</Text>
+            <Text style={styles.column}>{item.rendimientoPeriodo}</Text>
+            <Text style={styles.column}>{item.rendimientoAcumulado}</Text>
+          </View>
+        )}
+      />
       <TouchableOpacity
         onPress={volver}
         style={styles.touchableButtonV}
       >
         <Text style={styles.buttonText}>VOLVER</Text>
       </TouchableOpacity>
-      <View style={styles.header}>
-        <Text style={styles.columnHeader}>Periodo(Años) </Text>
-        <Text style={styles.columnHeader}>Saldo</Text>
-        <Text style={styles.columnHeader}>Rendimiento Periodo</Text>
-        <Text style={styles.columnHeader}>Rendimiento Acumulado</Text>
-      </View>
-      <FlatList
-  data={data}
-  keyExtractor={(item) => item.periodo.toString()}
-  renderItem={({ item }) => (
-    <View style={styles.row}>
-      <Text style={styles.column}>{item.periodo}</Text>
-      <Text style={styles.column}>{item.saldo}</Text>
-      <Text style={styles.column}>{item.rendimientoPeriodo}</Text>
-      <Text style={styles.column}>{item.rendimientoAcumulado}</Text>
-    </View>
-  )}
-/>
     </View>
   );
 }
@@ -68,13 +67,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   touchableButtonV: {
+    position: 'absolute',
+    bottom: 20,
+    left: 16,
+    right: 16,
     backgroundColor: "#3498db",
     padding: 10,
-    marginTop: 10,
     borderRadius: 5,
   },
   buttonText: {
     color: "#fff",
     textAlign: "center",
+    fontSize:20,
+    fontWeight:'bold'
   },
 });

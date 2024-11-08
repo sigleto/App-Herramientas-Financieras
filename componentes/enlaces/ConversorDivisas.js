@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     color: '#f4f8f8',
   },
   buttonTextV: {
-    fontSize: 15,
+    fontSize: 25,
     color: 'white',
   },
   resultText: {
