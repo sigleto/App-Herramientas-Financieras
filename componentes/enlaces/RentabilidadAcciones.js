@@ -4,8 +4,8 @@ import axios from 'axios';
 import Anuncio from '../Anexos/Anuncio';
 import { useNavigation } from '@react-navigation/native';
 
-
 const MARKETSTACK_API_ACCESS_KEY = process.env.MARKETSTACK_API_ACCESS_KEY;
+const EXCHANGE_RATE_API_KEY = process.env.EXCHANGE_RATE_API_KEY;
 
 export default function RentabilidadAcciones() {
   const [symbol, setSymbol] = useState('');
@@ -17,32 +17,52 @@ export default function RentabilidadAcciones() {
 
   const calcularRentabilidad = async () => {
     try {
+      // Obtener cotización en dólares
       const response = await axios.get(
-        `http://api.marketstack.com/v1/tickers/${symbol}/eod/latest?access_key=${MARKETSTACK_API_ACCESS_KEY}&exchange=XNYS`
+        `http://api.marketstack.com/v1/tickers/${symbol}/eod/latest?access_key=${MARKETSTACK_API_ACCESS_KEY}&exchange=XMAD`
       );
 
       if (response.data) {
         const stockData = response.data;
-        const precioActual = stockData.close;
-        setCotizacionActual(precioActual);
+        const precioDolares = stockData.close;
+
+        // Obtener tasa de cambio USD a EUR
+        const exchangeResponse = await axios.get(
+          `https://open.er-api.com/v6/latest/USD?apikey=${EXCHANGE_RATE_API_KEY}`
+        );
+
+        const tasaCambio = exchangeResponse.data.rates.EUR;
+        const precioEuros = precioDolares * tasaCambio; // Conversión a euros
+
+        setCotizacionActual(precioEuros.toFixed(2));
+
         const cantidadAccion = parseInt(cantidad);
         const inversionTotal = cantidadAccion * parseFloat(precioCompra);
-        const valorActual = cantidadAccion * precioActual;
+        const valorActual = cantidadAccion * precioEuros;
         const rentabilidad = valorActual - inversionTotal;
+
         setResultado(rentabilidad.toFixed(2).toString());
         setError(null);
       } else {
         setError('El símbolo de la acción no existe.');
       }
     } catch (error) {
-      console.error('Error en la solicitud de datos de la acción:', error);
-      setError('Error al obtener datos de la acción');
+      console.error(
+        'Error en la solicitud de datos de la acción:',
+        error.response?.data || error.message
+      );
+      setError(
+        'Error al obtener datos de la acción: ' +
+          (error.response?.data?.error?.message || error.message)
+      );
     }
   };
+
   const navigation = useNavigation();
   const volver = () => {
     navigation.navigate('Home');
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Simulador de Rentabilidad de Acciones</Text>
@@ -78,23 +98,21 @@ export default function RentabilidadAcciones() {
       {error && <Text style={styles.error}>{error}</Text>}
 
       {resultado !== null && (
-        <Text style={styles.result}>La rentabilidad estimada es: {resultado}</Text>
+        <Text style={styles.result}>La rentabilidad estimada es: {resultado} EUR</Text>
       )}
 
       {cotizacionActual !== null && (
-        <Text style={styles.result}>Cotización actual: {cotizacionActual}</Text>
+        <Text style={styles.result}>Cotización actual: {cotizacionActual} EUR</Text>
       )}
 
-    
-        <TouchableOpacity
-        onPress={volver}
-        style={styles.touchableButtonV}
-      >
+      <TouchableOpacity onPress={volver} style={styles.touchableButtonV}>
         <Text style={styles.buttonTextV}>VOLVER</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
