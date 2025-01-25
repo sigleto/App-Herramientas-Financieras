@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Share } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import Anuncio from './Anuncio';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function ResultadoAhorro({ route }) {
   const navigation = useNavigation();
@@ -54,11 +55,26 @@ export default function ResultadoAhorro({ route }) {
       },
     ],
   };
+  const shareApp = async () => {
+    try {
+      await Share.share({
+        message: 'Descarga la app Ayudas Públicas 2025 y descubre todas las ayudas disponibles. ¡Haz clic aquí para descargarla! https://play.google.com/store/apps/details?id=com.sigleto.Ayudas',
+      });
+    } catch (error) {
+      console.error('Error al compartir', error);
+    }
+  };
+  
   
   return (
     <View style={styles.container}>
       <Anuncio/>
+      
       <Text style={styles.enunciado}>Datos introducidos</Text>
+      <TouchableOpacity onPress={shareApp} style={styles.shareIcon}>
+          <MaterialCommunityIcons name="share-variant" size={24} color="#007BFF" />
+        </TouchableOpacity>
+      
       <Text style={styles.labelText}>Meta de ahorro: <Text style={styles.resultText}>{meta}</Text></Text>
       <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres} %</Text></Text>
       <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} {unidadPeriodo}</Text></Text>
@@ -160,5 +176,19 @@ const styles = StyleSheet.create({
     color: '#f4f8f8',
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginTop: 40,
+    position: 'relative', // Añade esta línea
+  },
+  shareIcon: {
+    position: 'absolute', // Añade esta línea
+    right: 20, // Ajusta según necesites
+    top: 80, // Alinea con la parte superior
   },
 });

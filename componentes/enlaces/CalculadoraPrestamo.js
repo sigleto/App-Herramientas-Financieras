@@ -30,7 +30,7 @@ export default function CalculadoraPrestamos() {
 
   const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: '#fffbde' }}>
     <View style={styles.container}>
    
       <Text style={styles.labelA}>Calculadora de Préstamos</Text>
@@ -85,10 +85,10 @@ export default function CalculadoraPrestamos() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     backgroundColor: '#fffbde',
-    marginTop:60,
+    
   },
   inputContainer: {
     flexDirection: 'row',
@@ -135,9 +135,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   labelA: {
+    marginTop:120,
     fontWeight: 'bold',
     fontSize: 22,
-    marginBottom: 15,
+    marginBottom: 35,
     color: '#b0950f',
     textAlign:'center'
   },

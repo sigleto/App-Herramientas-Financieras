@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 const Herramientas = () => {
@@ -12,65 +13,144 @@ const Herramientas = () => {
   };
 
   const opciones = [
-    { nombre: 'CALCULADORA DE PRÉSTAMOS', ruta: 'Prestamo' },
-    { nombre: 'CALCULADORA DE AHORROS', ruta: 'Ahorros' },
-    { nombre: 'CALCULADORA DE INVERSIONES', ruta: 'CalculadoraInversiones' },
-    { nombre: 'CONVERSOR DE DIVISAS', ruta: 'Divisa' },
-    { nombre: 'COTIZACIÓN DE ACCIONES NY', ruta: 'Acciones' },
-    { nombre: 'RENDIMIENTO PARA LA JUBILACIÓN', ruta: 'Jubilacion' },
-    { nombre: 'CALCULADORA DE RENTA INMEDIATA', ruta: 'CalculadoraInmediata' },
+    { 
+      nombre: 'CALCULADORA DE PRÉSTAMOS', 
+      ruta: 'Prestamo', 
+      icon: 'calculator' 
+    },
+    { 
+      nombre: 'CALCULADORA DE AHORROS', 
+      ruta: 'Ahorros', 
+      icon: 'piggy-bank' 
+    },
+    { 
+      nombre: 'CALCULADORA DE INVERSIONES', 
+      ruta: 'CalculadoraInversiones', 
+      icon: 'chart-line' 
+    },
+    { 
+      nombre: 'CONVERSOR DE DIVISAS', 
+      ruta: 'Divisa', 
+      icon: 'currency-usd' 
+    },
+    { 
+      nombre: 'COTIZACIÓN DE ACCIONES NY', 
+      ruta: 'Acciones', 
+      icon: 'finance' 
+    },
+    { 
+      nombre: 'RENDIMIENTO PARA LA JUBILACIÓN', 
+      ruta: 'Jubilacion', 
+      icon: 'cash-multiple' 
+    },
+    { 
+      nombre: 'CALCULADORA DE RENTA INMEDIATA', 
+      ruta: 'CalculadoraInmediata', 
+      icon: 'cash-multiple' 
+    },
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.tituloOrg}>Elige la herramienta a utilizar</Text>
-      <BannerAd
-        unitId={adUnitId}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
-      <View style={styles.organismos}>
-        {opciones.map((opcion) => (
-          <TouchableOpacity
-            key={opcion.ruta}
-            style={styles.opcion}
-            onPress={() => navigateToHerramientas(opcion.ruta)}
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView 
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.headerContainer}>
+          <TouchableOpacity 
+            onPress={() => navigation.goBack()} 
+            style={styles.backButton}
           >
-            <Text style={styles.opcionTexto}>{opcion.nombre}</Text>
+            <MaterialCommunityIcons 
+              name="arrow-left" 
+              size={24} 
+              color="#333" 
+            />
           </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+          <Text style={styles.tituloOrg}>Herramientas Financieras</Text>
+        </View>
+
+        <BannerAd
+          unitId={adUnitId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          style={styles.bannerAd}
+        />
+
+        <View style={styles.organismos}>
+          {opciones.map((opcion) => (
+            <TouchableOpacity
+              key={opcion.ruta}
+              style={styles.opcion}
+              onPress={() => navigateToHerramientas(opcion.ruta)}
+            >
+              <MaterialCommunityIcons 
+                name={opcion.icon} 
+                size={24} 
+                color="#fff" 
+                style={styles.opcionIcon}
+              />
+              <Text style={styles.opcionTexto}>{opcion.nombre}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f4f4f4',
+  },
   container: {
     flex: 1,
+    backgroundColor: '#f4f4f4',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    marginBottom: 20,
+  },
+  backButton: {
+    marginRight: 15,
   },
   tituloOrg: {
     fontSize: 24,
+    fontWeight: '700',
+    color: '#333',
+  },
+  bannerAd: {
     marginBottom: 20,
-    marginTop: 70,
-    textAlign: 'center',
-    color: '#54722e',
-    textDecorationLine: 'underline',
+    alignSelf: 'center',
   },
   organismos: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   opcion: {
-    display: 'flex',
-    backgroundColor: 'lightblue',
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 5,
-    width: 250,
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#3498db',
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  opcionIcon: {
+    marginRight: 15,
   },
   opcionTexto: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+    flex: 1,
+    flexWrap: 'wrap',
   },
 });
 

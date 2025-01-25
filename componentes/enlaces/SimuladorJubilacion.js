@@ -35,8 +35,9 @@ export default function App() {
       contentContainerStyle={{ flexGrow: 1 }}
       keyboardShouldPersistTaps="handled"
     >
-      <View style={styles.container}>
        
+      <View style={styles.container}>
+      <Text style={styles.labelA}>Simulador para la jubilación</Text>
         <Text style={styles.label}>Edad actual</Text>
         <TextInput
           style={styles.input}
@@ -134,6 +135,14 @@ const styles = StyleSheet.create({
   buttonText:{
     fontSize:22,
     color:'#f4f8f8'
+  },
+  labelA: {
+    marginTop:120,
+    fontWeight: 'bold',
+    fontSize: 22,
+    marginBottom: 35,
+    color: '#b0950f',
+    textAlign:'center'
   },
 });
 

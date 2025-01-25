@@ -39,10 +39,7 @@ const CalculadoraInversiones = () => {
         
      
       <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container}>
-      <BannerAd
-      unitId={adUnitId}
-      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-    />
+      
         <Text style={styles.labelA}>Calculadora de Inversiones</Text>
         
 
@@ -119,6 +116,10 @@ const CalculadoraInversiones = () => {
         <TouchableOpacity style={styles.touchableButton} onPress={calcularCuota}>
           <Text style={styles.buttonText}>Calcular</Text>
         </TouchableOpacity>
+        <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    />
       </ScrollView>
       
     </KeyboardAvoidingView>
@@ -186,10 +187,10 @@ const styles = StyleSheet.create({
   labelA: {
     fontWeight: 'bold',
     fontSize: 22,
-    marginBottom: 15,
-    color: 'black',
-    marginTop:20,
-    textAlign:'center'
+    marginBottom: 35,
+    color: '#b0950f',
+    textAlign:'center',
+    marginTop:-200,
   },
   pickerSelectedItem: {
     borderBottomWidth: 2, // Agrega un subrayado

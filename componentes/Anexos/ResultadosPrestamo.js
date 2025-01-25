@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Share } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-import Anuncio from './Anuncio'
+import Anuncio from './Anuncio';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function ResultadosPrestamo({ route }) {
   const navigation = useNavigation();
@@ -11,6 +12,7 @@ export default function ResultadosPrestamo({ route }) {
   const [totalIntereses, setTotalIntereses] = useState("");
   const [totalPagado, setTotalPagado] = useState("");
   const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
+
   const calculandoFunc = () => {
     const capitalFloat = parseFloat(capital);
     const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12;
@@ -29,16 +31,18 @@ export default function ResultadosPrestamo({ route }) {
     setTotalPagado(totalPagado.toFixed(2));
   };
 
-  useEffect(() => {
-    calculandoFunc();
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={AccesoTabla}>
-          <Text style={styles.buttonText}>Acceso a Tabla</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
+  const shareApp = async () => {
+    try {
+      const result = await Share.share({
+        message: 'Descarga la app Ayudas Públicas 2025 y descubre todas las ayudas disponibles. ¡Haz clic aquí para descargarla! https://play.google.com/store/apps/details?id=com.sigleto.Ayudas',
+      });
+      if (result.action === Share.dismissedAction) {
+        console.log('Compartir cancelado');
+      }
+    } catch (error) {
+      console.error('Error al compartir', error);
+    }
+  };
 
   const AccesoTabla = () => {
     const data = [];
@@ -78,67 +82,82 @@ export default function ResultadosPrestamo({ route }) {
     navigation.navigate("Tabla", { data });
   };
 
-
   useEffect(() => {
+    calculandoFunc();
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={AccesoTabla}>
-          <Text style={styles.buttonText}>Acceso a Tabla</Text>
+        <TouchableOpacity onPress={AccesoTabla} style={{ marginRight: 15 }}>
+          <Text style={styles.headerButtonText}>Acceso a Tabla</Text>
         </TouchableOpacity>
       ),
     });
-  }, [navigation, AccesoTabla]);
+  }, [navigation]);
 
-  const volver=()=>{navigation.navigate('Home')}
+  const volver = () => {
+    navigation.navigate('Home');
+  };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Anuncio/>
-      <Text style={styles.enunciado}>Datos introducidos</Text>
-    <Text style={styles.labelText}>Capital: <Text style={styles.resultText}>{capital}</Text></Text>
-    <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres}%</Text></Text>
-    <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} meses</Text></Text>
-    <Text style={styles.enunciado}>Resultados</Text>
-    <Text style={styles.labelText}>Cuota Mensual: <Text style={styles.resultTextr}>{parseFloat(cuota).toFixed(2)}</Text></Text>
-    <Text style={styles.labelText}>Total Pagado de intereses: <Text style={styles.resultText}>{parseFloat(totalIntereses).toFixed(2)}</Text></Text>
-    <Text style={styles.labelText}>Total Pagado al final: <Text style={styles.resultText}>{parseFloat(totalPagado).toFixed(2)}</Text></Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.enunciado}>Datos introducidos</Text>
+        <TouchableOpacity onPress={shareApp} style={styles.shareIconContainer}>
+          <MaterialCommunityIcons name="share-variant"  size={30} color="blue" />
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.labelText}>Capital: <Text style={styles.resultText}>{capital}</Text></Text>
+      <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres}%</Text></Text>
+      <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} meses</Text></Text>
+      <Text style={styles.enunciado}>Resultados</Text>
+      <Text style={styles.labelText}>Cuota Mensual: <Text style={styles.resultTextr}>{parseFloat(cuota).toFixed(2)}</Text></Text>
+      <Text style={styles.labelText}>Total Pagado de intereses: <Text style={styles.resultText}>{parseFloat(totalIntereses).toFixed(2)}</Text></Text>
+      <Text style={styles.labelText}>Total Pagado al final: <Text style={styles.resultText}>{parseFloat(totalPagado).toFixed(2)}</Text></Text>
 
       <TouchableOpacity
-  onPress={AccesoTabla}
-  style={styles.touchableButton}
->
-  <Text style={styles.buttonText}>Consultar Tabla</Text>
-</TouchableOpacity>
+        onPress={AccesoTabla}
+        style={styles.touchableButton}
+      >
+        <Text style={styles.buttonText}>Consultar Tabla</Text>
+      </TouchableOpacity>
 
- <TouchableOpacity
-  onPress={volver}
-  style={styles.touchableButtonV}
->
-  <Text style={styles.buttonTextA}>VOLVER</Text>
-</TouchableOpacity>
-<BannerAd
-      unitId={adUnitId}
-      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-    />
+      <TouchableOpacity
+        onPress={volver}
+        style={styles.touchableButtonV}
+      >
+        <Text style={styles.buttonTextA}>VOLVER</Text>
+      </TouchableOpacity>
+
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: '#fffbde',
+    marginTop: 50,
   },
-
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  shareIconContainer: {
+    padding: 5,
+  },
   input: {
     marginBottom: 20,
     textAlign: 'center',
     fontSize: 22,
     fontWeight: 'bold',
   },
-
   touchableButton: {
     marginVertical: 20,
     backgroundColor: '#555ff7',
@@ -149,13 +168,12 @@ const styles = StyleSheet.create({
   touchableButtonV: {
     marginVertical: 10,
     backgroundColor: '#555ff7',
-    paddingHorizontal:5,
+    paddingHorizontal: 5,
     marginTop: 15,
     borderRadius: 10,
     alignSelf: 'center',
-    marginBottom:60,
+    marginBottom: 20,
   },
-
   buttonText: {
     fontSize: 24,
     color: '#f4f8f8',
@@ -167,47 +185,36 @@ const styles = StyleSheet.create({
     color: '#f4f8f8',
     textAlign: 'center',
     fontWeight: 'bold',
-    
   },
-
   resultText: {
-    marginTop: 30,
     fontSize: 18,
     fontWeight: 'bold',
     color: '#007BFF',
-    fontWeight: 'bold',
-    textAlign:'center'
+    textAlign: 'center'
   },
   resultTextr: {
-    marginTop: 30,
     fontSize: 18,
     fontWeight: 'bold',
     color: 'red',
-    fontWeight: 'bold',
-    textAlign:'center'
+    textAlign: 'center'
   },
-
   enunciado: {
-    marginTop: 40,
     fontSize: 25,
     fontWeight: 'bold',
     color: '#28a745',
     textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom:40,
-  },
-
-  label: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: '#28a745',
+    marginLeft:'25%',
   },
   labelText: {
     fontSize: 20,
     color: '#333',
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign:'center'
-   
+    textAlign: 'center'
+  },
+  headerButtonText: {
+    fontSize: 16,
+    color: '#007BFF',
+    fontWeight: 'bold',
   },
 });

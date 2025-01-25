@@ -27,7 +27,7 @@
         "com.google.android.gms.permission.AD_ID"
       ],
       "package": "com.sigleto.Herramientas_financieras",
-      "versionCode": 17
+      "versionCode": 22
     },
     "web": {
       "favicon": "./assets/favicon.png"

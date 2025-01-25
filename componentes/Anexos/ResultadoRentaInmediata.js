@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Share } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ResultadosRentaInmediata = ({ route }) => {
   const { capital, tasaInteres, periodo } = route.params;
   const [rentaMensual, setRentaMensual] = useState(null);
+  const navigation = useNavigation();
 
   const calcularRentaMensual = () => {
     const capitalFloat = parseFloat(capital || '0');
@@ -24,19 +26,33 @@ const ResultadosRentaInmediata = ({ route }) => {
     }
   }, [capital, tasaInteres, periodo]);
 
-  const navigation = useNavigation();
   const volver = () => {
     navigation.navigate('Home');
   };
 
+  const shareApp = async () => {
+    try {
+      await Share.share({
+        message: 'Descarga la app Ayudas Públicas 2025 y descubre todas las ayudas disponibles. ¡Haz clic aquí para descargarla! https://play.google.com/store/apps/details?id=com.sigleto.Ayudas',
+      });
+    } catch (error) {
+      console.error('Error al compartir', error);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.enunciado}>Datos Introducidos</Text>
+      <View style={styles.header}>
+        <Text style={styles.enunciado}>Datos Introducidos</Text>
+        <TouchableOpacity onPress={shareApp} style={styles.shareIcon}>
+          <MaterialCommunityIcons name="share-variant" size={24} color="#007BFF" />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.labelText}>Capital Inicial: <Text style={styles.resultText}>{capital}</Text></Text>
       <Text style={styles.labelText}>Tasa de Interés: <Text style={styles.resultText}>{tasaInteres}%</Text></Text>
       <Text style={styles.labelText}>Período: <Text style={styles.resultText}>{periodo} meses</Text></Text>
 
-      <Text style={styles.enunciado}>Resultado</Text>
+      <Text style={styles.enunciadoR}>Resultado</Text>
       <Text style={styles.labelText}>Renta Mensual: <Text style={styles.resultText}>{rentaMensual?.toFixed(2)}</Text></Text>
 
       <TouchableOpacity onPress={volver} style={styles.touchableButton}>
@@ -49,16 +65,17 @@ const ResultadosRentaInmediata = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: '#fffbde',
+   
   },
 
   input: {
     marginBottom: 20,
     textAlign: 'center',
-    fontSize: 22,
+    fontSize: 32,
     fontWeight: 'bold',
   },
 
@@ -79,29 +96,39 @@ const styles = StyleSheet.create({
 
   resultText: {
     marginTop: 30,
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: 'bold',
     color: '#007BFF',
     textAlign: 'center',
   },
 
   enunciado: {
-    marginTop: 4,
-    fontSize: 20,
+    marginTop: 140,
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#28a745',
     textAlign: 'center',
     marginBottom: 20,
+    marginLeft: '16%',
+  },
+  enunciadoR: {
+    marginTop: 140,
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#28a745',
+    textAlign: 'center',
+    marginBottom: 20,
+    
   },
 
   label: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 30,
     color: '#28a745',
   },
 
   labelText: {
-    fontSize: 20,
+    fontSize: 30,
     color: '#333',
     fontWeight: 'bold',
     marginBottom: 10,
@@ -121,6 +148,18 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'white',
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginTop: 10,
+  },
+  shareIcon: {
+    padding: 10,
+  },
+  // ... (resto de los estilos)
 });
 
 export default ResultadosRentaInmediata;

@@ -1,22 +1,58 @@
 import 'react-native-gesture-handler';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { StyleSheet, Text, View, Share, Alert, TouchableOpacity } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { PrincipalStack } from './componentes/Navigation';
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import PoliticaPrivacidad from './componentes/Anexos/PoliticaPrivacidad';
 import DescargoResponsabilidad from './componentes/Anexos/DescargoResponsabilidad';
 
 enableScreens();
 const Drawer = createDrawerNavigator();
-const App = ({navigation}) => {
+
+const shareApp = async () => {
+  try {
+    const result = await Share.share({
+      message: 'Descarga la app Ayudas Públicas 2025 y descubre todas las ayudas disponibles. ¡Haz clic aquí para descargarla! https://play.google.com/store/apps/details?id=com.sigleto.Ayudas',
+    });
+    if (result.action === Share.dismissedAction) {
+      Alert.alert('Compartir cancelado');
+    }
+  } catch (error) {
+    Alert.alert('Error', 'Hubo un problema al intentar compartir la app.');
+  }
+};
+
+const ShareScreen = () => {
+  const handleShare = useCallback(() => {
+    shareApp();
+  }, []);
+
   return (
-    
+    <View style={styles.shareContainer}>
+      <TouchableOpacity onPress={handleShare} style={styles.shareButton}>
+        <Text style={styles.shareText}>📤 Compartir la aplicación</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const App = () => {
+  return (
+    <GestureHandlerRootView style={styles.container}>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}
+        <Drawer.Navigator 
+          initialRouteName="Inicio" 
+          screenOptions={{ 
+            headerShown: false,
+            drawerStyle: styles.drawer,
+            drawerLabelStyle: styles.drawerLabel,
+            drawerActiveTintColor: '#007AFF',
+            drawerInactiveTintColor: '#555',
+          }}
         >
           <Drawer.Screen
             name="Inicio"
@@ -24,20 +60,16 @@ const App = ({navigation}) => {
             options={{
               drawerIcon: ({ color, size }) => (
                 <MaterialCommunityIcons name="home" size={size} color={color} />
-              ), drawerLabelStyle: {
-                fontSize: 20,
-              }
+              )
             }}
           />
           <Drawer.Screen
-            name="Politica"
+            name="Política"
             component={PoliticaPrivacidad}
             options={{
               drawerIcon: ({ color, size }) => (
                 <MaterialCommunityIcons name="shield-account" size={size} color={color} />
-              ), drawerLabelStyle: {
-                fontSize: 20,
-              }
+              )
             }}
           />
           <Drawer.Screen
@@ -46,23 +78,63 @@ const App = ({navigation}) => {
             options={{
               drawerIcon: ({ color, size }) => (
                 <MaterialCommunityIcons name="alert-circle-outline" size={size} color={color} />
-              ), drawerLabelStyle: {
-                fontSize: 20,
-              }
+              )
+            }}
+          />
+          <Drawer.Screen
+            name="Compartir"
+            component={ShareScreen}
+            options={{
+              drawerIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="share-variant" size={size} color={color} />
+              ),
+              drawerLabel: 'Compartir la App',
             }}
           />
         </Drawer.Navigator>
       </NavigationContainer>
-    
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F0F0F0',
   },
-  datos:{
-    backgroundColor:"red",
+  drawer: {
+    backgroundColor: '#fff',
+    paddingTop: 20,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  drawerLabel: {
+    fontSize: 18,
+    marginLeft: -5,
+    fontWeight: '500',
+  },
+  shareContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  shareButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 14,
+    paddingHorizontal: 30,
+    borderRadius: 12,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+  },
+  shareText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
   },
 });
 

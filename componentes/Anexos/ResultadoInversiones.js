@@ -1,10 +1,9 @@
-// ResultadoInversiones.js
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Share } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-import Anuncio from './Anuncio'
-
+import Anuncio from './Anuncio';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function ResultadoInversiones({ route }) {
   const navigation = useNavigation();
@@ -120,10 +119,25 @@ export default function ResultadoInversiones({ route }) {
   const volver = () => {
     navigation.navigate("Home");
   };
+  const shareApp = async () => {
+    try {
+      await Share.share({
+        message: 'Descarga la app Ayudas Públicas 2025 y descubre todas las ayudas disponibles. ¡Haz clic aquí para descargarla! https://play.google.com/store/apps/details?id=com.sigleto.Ayudas',
+      });
+    } catch (error) {
+      console.error('Error al compartir', error);
+    }
+  };
+
   return (
     <View>
       <Anuncio/>
-      <Text style={styles.enunciado}>Datos introducidos</Text>
+      <View style={styles.header}>
+        <Text style={styles.enunciado}>Datos introducidos</Text>
+        <TouchableOpacity onPress={shareApp} style={styles.shareIcon}>
+          <MaterialCommunityIcons name="share-variant" size={24} color="#007BFF" />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.labelText}>
         Capital: <Text style={styles.resultText}>{principal}</Text>
       </Text>
@@ -240,5 +254,19 @@ const styles = StyleSheet.create({
     marginTop: 100,
     borderRadius: 10,
     alignSelf: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginTop: 40,
+    position: 'relative',
+  },
+  shareIcon: {
+    position: 'absolute',
+    right: 20,
+    top: 40,
   },
 });
