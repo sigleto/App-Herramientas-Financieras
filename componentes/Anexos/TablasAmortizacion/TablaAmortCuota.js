@@ -1,23 +1,26 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet,TouchableOpacity } from "react-native";
-import Anuncio from "./Anuncio";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import Anuncio from "../Anuncio";
 import { useNavigation } from "@react-navigation/native";
 
-export default function TablaAmortizacion({ route }) {
-  console.log('Llegó a TablaPrestamo'); // Verifica si llegó a esta pantalla
-  
-  const navigation=useNavigation();
+export default function TablaAmortCuota({ route }) {
+  const navigation = useNavigation();
   const data = route.params.data || [];
 
-  const volver=()=>{navigation.navigate('Home')}
+  const volver = () => {
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
       <Anuncio />
-      <TouchableOpacity
-       onPress={volver}
-       style={styles.touchableButtonV}
-        >
+      <TouchableOpacity onPress={volver} style={styles.touchableButtonV}>
         <Text style={styles.buttonText}>VOLVER</Text>
       </TouchableOpacity>
       <View style={styles.header}>
@@ -33,10 +36,10 @@ export default function TablaAmortizacion({ route }) {
         renderItem={({ item }) => (
           <View style={styles.row}>
             <Text style={styles.column}>{item.periodo}</Text>
-            <Text style={styles.column}>{item.cuota} </Text>
-            <Text style={styles.column}>{item.interes} </Text>
-            <Text style={styles.column}>{item.amortizacion} </Text>
-            <Text style={styles.column}>{item.saldoPendiente} </Text>
+            <Text style={styles.column}>{item.cuota}€</Text>
+            <Text style={styles.column}>{item.interes}€</Text>
+            <Text style={styles.column}>{item.amortizacion}€</Text>
+            <Text style={styles.column}>{item.saldoPendiente}€</Text>
           </View>
         )}
       />
@@ -48,7 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor:'#fffbde'
+    backgroundColor: "#fffbde",
   },
   header: {
     flexDirection: "row",
@@ -58,9 +61,9 @@ const styles = StyleSheet.create({
   columnHeader: {
     fontWeight: "bold",
     flex: 1,
-    marginTop:40,
-    backgroundColor:'#4df25c'
-    
+    marginTop: 40,
+    backgroundColor: "#4df25c",
+    textAlign: "center",
   },
   row: {
     flexDirection: "row",
@@ -69,14 +72,19 @@ const styles = StyleSheet.create({
   },
   column: {
     flex: 1,
+    textAlign: "center",
   },
   touchableButtonV: {
     marginVertical: 10,
-    backgroundColor: '#61d8eb',
-    paddingHorizontal:5,
+    backgroundColor: "#61d8eb",
+    paddingHorizontal: 5,
     marginTop: 36,
     borderRadius: 10,
-    alignSelf: 'center',
-    
+    alignSelf: "center",
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#f4f8f8",
+    fontWeight: "bold",
   },
 });

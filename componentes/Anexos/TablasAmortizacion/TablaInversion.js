@@ -1,6 +1,12 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import Anuncio from "./Anuncio";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import Anuncio from "../Anuncio";
 import { useNavigation } from "@react-navigation/native";
 
 export default function TablaInversion({ route }) {
@@ -8,7 +14,7 @@ export default function TablaInversion({ route }) {
   const data = route.params.data || [];
 
   const volver = () => {
-    navigation.navigate('Home');
+    navigation.navigate("Home");
   };
 
   return (
@@ -32,10 +38,7 @@ export default function TablaInversion({ route }) {
           </View>
         )}
       />
-      <TouchableOpacity
-        onPress={volver}
-        style={styles.touchableButtonV}
-      >
+      <TouchableOpacity onPress={volver} style={styles.touchableButtonV}>
         <Text style={styles.buttonText}>VOLVER</Text>
       </TouchableOpacity>
     </View>
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   touchableButtonV: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     left: 16,
     right: 16,
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     textAlign: "center",
-    fontSize:20,
-    fontWeight:'bold'
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
