@@ -53,7 +53,11 @@ export default function ResultadoAmortAnticipada({ route }) {
     setResultadoReduccionCuota({
       nuevaCuota: nuevaCuota.toFixed(2),
       reduccionCuota: (cuotaOriginal - nuevaCuota).toFixed(2),
-      ahorroTotal: (cuotaOriginal * plazo - nuevaCuota * plazo).toFixed(2),
+      ahorroTotal: (
+        cuotaOriginal * plazo -
+        capital -
+        (nuevaCuota * plazo - nuevoCapital)
+      ).toFixed(2),
     });
 
     // Calcular la amortización para reducción de cuota
@@ -89,8 +93,8 @@ export default function ResultadoAmortAnticipada({ route }) {
       ultimaCuota: ultimaCuota.toFixed(2),
       ahorroTotal: (
         cuotaOriginal * plazo -
-        cuotaOriginal * nuevoPlazoCuotas -
-        ultimaCuota
+        capital -
+        (cuotaOriginal * nuevoPlazoCuotas - nuevoCapital)
       ).toFixed(2),
     });
 

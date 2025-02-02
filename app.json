@@ -23,7 +23,7 @@
       },
       "permissions": ["com.google.android.gms.permission.AD_ID"],
       "package": "com.sigleto.Herramientas_financieras",
-      "versionCode": 24
+      "versionCode": 25
     },
     "web": {
       "favicon": "./assets/favicon.png"
