@@ -3,7 +3,7 @@
     "name": "Finanzas fácil",
     "slug": "Herramientas_financieras",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/Icono.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -23,7 +23,7 @@
       },
       "permissions": ["com.google.android.gms.permission.AD_ID"],
       "package": "com.sigleto.Herramientas_financieras",
-      "versionCode": 25
+      "versionCode": 27
     },
     "web": {
       "favicon": "./assets/favicon.png"
