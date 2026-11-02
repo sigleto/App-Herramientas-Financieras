@@ -31,6 +31,8 @@ import CalculadoraCarencia from "./enlaces/CalculadoraCarencia";
 import ResultadoCarencia from "./Anexos/ResultadoCarencia";
 import CalculadoraAmortAnticipada from "./enlaces/CalculadoraAmortAnticipada";
 import ResultadoAmortAnticipada from "./Anexos/ResultadoAmortAnticipada";
+import NuevasHerramientas from "./enlaces/NuevasHerramientas";
+import SimulacionesGuardadas from "./enlaces/SimulacionesGuardadas";
 
 const Stack = createStackNavigator();
 
@@ -40,6 +42,16 @@ export function HerramientasStack() {
       <Stack.Screen
         name="HerramientasStack"
         component={Herramientas}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NuevasHerramientas"
+        component={NuevasHerramientas}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SimulacionesGuardadas"
+        component={SimulacionesGuardadas}
         options={{ headerShown: false }}
       />
       <Stack.Screen

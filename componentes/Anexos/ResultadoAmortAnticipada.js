@@ -8,11 +8,15 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "./Publicidad";
 import Anuncio from "./Anuncio";
+import {
+  calculateEarlyRepayment,
+  parseFinancialNumber,
+} from "../finanzas";
 
 export default function ResultadoAmortAnticipada({ route }) {
   const navigation = useNavigation();
@@ -36,84 +40,25 @@ export default function ResultadoAmortAnticipada({ route }) {
   }, []);
 
   const calcularResultados = () => {
-    const capital = parseFloat(capitalPendiente);
-    const plazo = parseInt(plazoRestante);
-    const tasaInteres = parseFloat(interes) / 100 / 12;
-    const amortizacion = parseFloat(amortizacionAnticipada);
-
-    // Cálculo para reducción de cuota
-    const nuevoCapital = capital - amortizacion;
-    const nuevaCuota =
-      (nuevoCapital * tasaInteres * Math.pow(1 + tasaInteres, plazo)) /
-      (Math.pow(1 + tasaInteres, plazo) - 1);
-    const cuotaOriginal =
-      (capital * tasaInteres * Math.pow(1 + tasaInteres, plazo)) /
-      (Math.pow(1 + tasaInteres, plazo) - 1);
-
+    const calculation = calculateEarlyRepayment({
+      principal: parseFinancialNumber(capitalPendiente),
+      annualRatePercent: parseFinancialNumber(interes),
+      months: parseFinancialNumber(plazoRestante),
+      extraPayment: parseFinancialNumber(amortizacionAnticipada),
+    });
     setResultadoReduccionCuota({
-      nuevaCuota: nuevaCuota.toFixed(2),
-      reduccionCuota: (cuotaOriginal - nuevaCuota).toFixed(2),
-      ahorroTotal: (
-        cuotaOriginal * plazo -
-        capital -
-        (nuevaCuota * plazo - nuevoCapital)
-      ).toFixed(2),
+      nuevaCuota: calculation.reducedPayment.monthlyPayment.toFixed(2),
+      reduccionCuota: calculation.reducedPayment.monthlySavings.toFixed(2),
+      ahorroTotal: calculation.reducedPayment.interestSaved.toFixed(2),
     });
-
-    // Calcular la amortización para reducción de cuota
-    let saldoReduccionCuota = nuevoCapital;
-    const amortizacionArrayReduccionCuota = [];
-    for (let i = 0; i < plazo; i++) {
-      const interesMensual = saldoReduccionCuota * tasaInteres;
-      const capitalMensual = nuevaCuota - interesMensual;
-      saldoReduccionCuota -= capitalMensual;
-      amortizacionArrayReduccionCuota.push({
-        periodo: i + 1,
-        cuota: nuevaCuota.toFixed(2),
-        interes: interesMensual.toFixed(2),
-        amortizacion: capitalMensual.toFixed(2),
-        saldoPendiente: saldoReduccionCuota.toFixed(2),
-      });
-    }
-    setAmortizacionReduccionCuota(amortizacionArrayReduccionCuota);
-
-    // Cálculo para reducción de plazo
-    let nuevoPlazoParcial =
-      Math.log(cuotaOriginal / (cuotaOriginal - nuevoCapital * tasaInteres)) /
-      Math.log(1 + tasaInteres);
-    let nuevoPlazoCuotas = Math.floor(nuevoPlazoParcial);
-    let ultimaCuota =
-      nuevoCapital * Math.pow(1 + tasaInteres, nuevoPlazoParcial) -
-      (cuotaOriginal * (Math.pow(1 + tasaInteres, nuevoPlazoParcial) - 1)) /
-        tasaInteres;
-
+    setAmortizacionReduccionCuota(calculation.reducedPayment.rows);
     setResultadoReduccionPlazo({
-      nuevoPlazoCuotas,
-      reduccionPlazo: plazo - nuevoPlazoCuotas,
-      ultimaCuota: ultimaCuota.toFixed(2),
-      ahorroTotal: (
-        cuotaOriginal * plazo -
-        capital -
-        (cuotaOriginal * nuevoPlazoCuotas - nuevoCapital)
-      ).toFixed(2),
+      nuevoPlazoCuotas: calculation.reducedTerm.months,
+      reduccionPlazo: calculation.reducedTerm.monthsSaved,
+      ultimaCuota: calculation.reducedTerm.lastPayment.toFixed(2),
+      ahorroTotal: calculation.reducedTerm.interestSaved.toFixed(2),
     });
-
-    // Calcular la amortización para reducción de plazo
-    let saldoReduccionPlazo = capital;
-    const amortizacionArrayReduccionPlazo = [];
-    for (let i = 0; i < nuevoPlazoCuotas; i++) {
-      const interesMensual = saldoReduccionPlazo * tasaInteres;
-      const capitalMensual = cuotaOriginal - interesMensual;
-      saldoReduccionPlazo -= capitalMensual;
-      amortizacionArrayReduccionPlazo.push({
-        periodo: i + 1,
-        cuota: cuotaOriginal.toFixed(2),
-        interes: interesMensual.toFixed(2),
-        amortizacion: capitalMensual.toFixed(2),
-        saldoPendiente: saldoReduccionPlazo.toFixed(2),
-      });
-    }
-    setAmortizacionReduccionPlazo(amortizacionArrayReduccionPlazo);
+    setAmortizacionReduccionPlazo(calculation.reducedTerm.rows);
   };
 
   const volver = () => {
@@ -199,7 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
   },
   title: {
     fontSize: 24,
@@ -224,7 +169,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   touchableButton: {
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 10,
@@ -234,18 +179,18 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     fontWeight: "bold",
   },
   buttonTextA: {
     fontSize: 18,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     textAlign: "center",
     fontWeight: "bold",
   },
   touchableButtonV: {
     marginVertical: 10,
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 5,
     marginTop: 15,
     borderRadius: 10,

@@ -1,18 +1,38 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
-import { Input } from 'react-native-elements';
+import { Input } from "../Entrada";
 import { useNavigation } from '@react-navigation/native';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { BannerPublicidad as BannerAd } from '../Anexos/Publicidad';
+import { parseFinancialNumber } from "../finanzas";
 
 const CalculadoraRentaInmediata = () => {
-  const [capital, setCapital] = useState('');
-  const [tasaInteres, setTasaInteres] = useState('');
-  const [periodo, setPeriodo] = useState('');
+  const [capital, setCapital] = useState('50000');
+  const [tasaInteres, setTasaInteres] = useState('3');
+  const [periodo, setPeriodo] = useState('240');
   const navigation = useNavigation();
 
   const calcularRentaInmediata = () => {
     if (!capital || !tasaInteres || !periodo) {
       alert('Por favor, completa todos los campos.');
+      return;
+    }
+
+    const principal = parseFinancialNumber(capital);
+    const rate = parseFinancialNumber(tasaInteres);
+    const months = parseFinancialNumber(periodo);
+    if (
+      !Number.isFinite(principal) ||
+      !Number.isFinite(rate) ||
+      !Number.isInteger(months) ||
+      principal <= 0 ||
+      rate < 0 ||
+      rate > 100 ||
+      months <= 0 ||
+      months > 1200
+    ) {
+      alert("El capital debe ser positivo, el plazo entre 1 y 1200 meses y el interés anual entre 0 % y 100 %.");
+      return;
     } else {
       navigation.navigate('ResultadoInmediatas', {
         capital,
@@ -44,7 +64,7 @@ const CalculadoraRentaInmediata = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Tasa de Interés (%)</Text>
+            <Text style={styles.label}>Tipo de interés anual (%)</Text>
             <Input
               keyboardType="numeric"
               value={tasaInteres}
@@ -84,7 +104,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#fffbde',
+    backgroundColor: '#F4F7FB',
     paddingBottom: 100, // Espacio adicional para que el banner no tape el botón
   },
   inputContainer: {
@@ -95,13 +115,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     borderWidth: 2,
-    borderColor: '#555ff7',
+    borderColor: '#246BFD',
     borderRadius: 10,
     padding: 10,
   },
   touchableButton: {
     marginVertical: 10,
-    backgroundColor: '#555ff7',
+    backgroundColor: '#246BFD',
     paddingHorizontal: 110,
     marginTop: 5,
     width: '95%',
@@ -109,7 +129,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 23,
-    color: '#f4f8f8',
+    color: '#FFFFFF',
     textAlign: 'center',
   },
   label: {

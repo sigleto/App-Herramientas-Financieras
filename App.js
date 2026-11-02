@@ -7,6 +7,8 @@ import {
   Share,
   Alert,
   TouchableOpacity,
+  Platform,
+  StatusBar,
 } from "react-native";
 import { enableScreens } from "react-native-screens";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -16,6 +18,8 @@ import { PrincipalStack } from "./componentes/Navigation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import PoliticaPrivacidad from "./componentes/Anexos/PoliticaPrivacidad";
 import DescargoResponsabilidad from "./componentes/Anexos/DescargoResponsabilidad";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { PublicidadProvider } from "./componentes/Anexos/Publicidad";
 
 enableScreens();
 const Drawer = createDrawerNavigator();
@@ -51,68 +55,78 @@ const ShareScreen = () => {
 const App = () => {
   return (
     <GestureHandlerRootView style={styles.container}>
-      <NavigationContainer>
-        <Drawer.Navigator
-          initialRouteName="Inicio"
-          screenOptions={{
-            headerShown: false,
-            drawerStyle: styles.drawer,
-            drawerLabelStyle: styles.drawerLabel,
-            drawerActiveTintColor: "#007AFF",
-            drawerInactiveTintColor: "#555",
-          }}
-        >
-          <Drawer.Screen
-            name="Inicio"
-            component={PrincipalStack}
-            options={{
-              drawerIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="home" size={size} color={color} />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Política"
-            component={PoliticaPrivacidad}
-            options={{
-              drawerIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="shield-account"
-                  size={size}
-                  color={color}
+      <SafeAreaProvider>
+        <PublicidadProvider>
+          <SafeAreaView
+            style={styles.safeArea}
+            edges={Platform.OS === "android" ? ["top", "bottom"] : []}
+          >
+            <StatusBar barStyle="dark-content" backgroundColor="#F4F7FB" />
+            <NavigationContainer>
+              <Drawer.Navigator
+                initialRouteName="Inicio"
+                screenOptions={{
+                  headerShown: false,
+                  drawerStyle: styles.drawer,
+                  drawerLabelStyle: styles.drawerLabel,
+                  drawerActiveTintColor: "#246BFD",
+                  drawerInactiveTintColor: "#6B7C93",
+                }}
+              >
+                <Drawer.Screen
+                  name="Inicio"
+                  component={PrincipalStack}
+                  options={{
+                    drawerIcon: ({ color, size }) => (
+                      <MaterialCommunityIcons name="home" size={size} color={color} />
+                    ),
+                  }}
                 />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Descargo"
-            component={DescargoResponsabilidad}
-            options={{
-              drawerIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="alert-circle-outline"
-                  size={size}
-                  color={color}
+                <Drawer.Screen
+                  name="Política"
+                  component={PoliticaPrivacidad}
+                  options={{
+                    drawerIcon: ({ color, size }) => (
+                      <MaterialCommunityIcons
+                        name="shield-account"
+                        size={size}
+                        color={color}
+                      />
+                    ),
+                  }}
                 />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Compartir"
-            component={ShareScreen}
-            options={{
-              drawerIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="share-variant"
-                  size={size}
-                  color={color}
+                <Drawer.Screen
+                  name="Descargo"
+                  component={DescargoResponsabilidad}
+                  options={{
+                    drawerIcon: ({ color, size }) => (
+                      <MaterialCommunityIcons
+                        name="alert-circle-outline"
+                        size={size}
+                        color={color}
+                      />
+                    ),
+                  }}
                 />
-              ),
-              drawerLabel: "Compartir la App",
-            }}
-          />
-        </Drawer.Navigator>
-      </NavigationContainer>
+                <Drawer.Screen
+                  name="Compartir"
+                  component={ShareScreen}
+                  options={{
+                    drawerIcon: ({ color, size }) => (
+                      <MaterialCommunityIcons
+                        name="share-variant"
+                        size={size}
+                        color={color}
+                      />
+                    ),
+                    drawerLabel: "Compartir la App",
+                  }}
+                />
+              </Drawer.Navigator>
+            </NavigationContainer>
+          </SafeAreaView>
+        </PublicidadProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 };
@@ -120,7 +134,11 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: "#F4F7FB",
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#F4F7FB",
   },
   drawer: {
     backgroundColor: "#fff",

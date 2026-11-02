@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { BannerPublicidad as BannerAd } from '../Anexos/Publicidad';
+import { parseFinancialNumber } from "../finanzas";
 
 export default function App() {
-  const [edadActual, setEdadActual] = useState('');
-  const [edadJubilacion, setEdadJubilacion] = useState('');
-  const [montoActual, setMontoActual] = useState('');
-  const [tasaInteres, setTasaInteres] = useState('');
+  const [edadActual, setEdadActual] = useState('35');
+  const [edadJubilacion, setEdadJubilacion] = useState('67');
+  const [montoActual, setMontoActual] = useState('10000');
+  const [tasaInteres, setTasaInteres] = useState('4');
 
   const navigation = useNavigation();
   const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/2360831572';
@@ -18,12 +20,32 @@ export default function App() {
       return;
     }
 
+    const currentAge = parseFinancialNumber(edadActual);
+    const retirementAge = parseFinancialNumber(edadJubilacion);
+    const savings = parseFinancialNumber(montoActual);
+    const rate = parseFinancialNumber(tasaInteres);
+    if (
+      !Number.isInteger(currentAge) ||
+      !Number.isInteger(retirementAge) ||
+      !Number.isFinite(savings) ||
+      !Number.isFinite(rate) ||
+      currentAge < 16 ||
+      retirementAge <= currentAge ||
+      retirementAge > 100 ||
+      savings < 0 ||
+      rate < 0 ||
+      rate > 100
+    ) {
+      Alert.alert("Datos no válidos", "Introduce edades enteras (16-100), una edad de jubilación posterior, ahorros no negativos e interés entre 0 % y 100 %.");
+      return;
+    }
+
     // Realizar el cálculo y navegar a la pantalla de resultados
     navigation.navigate("ResultadoJubilacion", {
-      edadActual: edadActual,
-      edadJubilacion: edadJubilacion,
-      montoActual: montoActual,
-      tasaInteres: tasaInteres,
+      edadActual: currentAge,
+      edadJubilacion: retirementAge,
+      montoActual: savings,
+      tasaInteres: rate,
     });
   };
  
@@ -99,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: '#fffbde',
+    backgroundColor: '#F4F7FB',
     
     
   },
@@ -110,7 +132,7 @@ const styles = StyleSheet.create({
     padding: 6,
     width: '80%',
     borderWidth: 2,  // Agregar un borde
-    borderColor: "#555ff7",  // Color del borde
+    borderColor: "#246BFD",  // Color del borde
     borderRadius: 10,  // Bordes redondeados
     padding: 10,  // Espaciado interno
   },
@@ -128,21 +150,20 @@ const styles = StyleSheet.create({
   
   touchableButton: {
     marginVertical: 10,
-    backgroundColor:'#555ff7',
+    backgroundColor:'#246BFD',
     paddingHorizontal:27,
     marginTop:20,  
   },
   buttonText:{
     fontSize:22,
-    color:'#f4f8f8'
+    color:'#FFFFFF'
   },
   labelA: {
     marginTop:120,
     fontWeight: 'bold',
     fontSize: 22,
     marginBottom: 35,
-    color: '#b0950f',
+    color: '#246BFD',
     textAlign:'center'
   },
 });
-

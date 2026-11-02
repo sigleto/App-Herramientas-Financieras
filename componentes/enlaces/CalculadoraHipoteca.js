@@ -8,18 +8,19 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Input } from "react-native-elements";
+import { Input } from "../Entrada";
 import { useNavigation } from "@react-navigation/native";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "../Anexos/Publicidad";
+import { parseFinancialNumber } from "../finanzas";
 
 export default function CalculadoraHipotecaria() {
-  const [capital, setCapital] = useState("");
-  const [plazo, setPlazo] = useState("");
-  const [interes, setInteres] = useState("");
+  const [capital, setCapital] = useState("200000");
+  const [plazo, setPlazo] = useState("25");
+  const [interes, setInteres] = useState("3");
   const [error, setError] = useState("");
   const navigation = useNavigation();
 
@@ -31,12 +32,25 @@ export default function CalculadoraHipotecaria() {
       setError("Por favor, complete todos los campos.");
       return false;
     }
-    if (isNaN(capital) || isNaN(plazo) || isNaN(interes)) {
+    const capitalNumber = parseFinancialNumber(capital);
+    const plazoNumber = parseFinancialNumber(plazo);
+    const interesNumber = parseFinancialNumber(interes);
+    if (
+      !Number.isFinite(capitalNumber) ||
+      !Number.isFinite(plazoNumber) ||
+      !Number.isFinite(interesNumber)
+    ) {
       setError("Por favor, ingrese valores numéricos válidos.");
       return false;
     }
-    if (capital <= 0 || plazo <= 0 || interes <= 0) {
-      setError("Por favor, ingrese valores positivos.");
+    if (
+      capitalNumber <= 0 ||
+      plazoNumber <= 0 ||
+      plazoNumber > 100 ||
+      interesNumber < 0 ||
+      interesNumber > 100
+    ) {
+      setError("El capital y plazo deben ser positivos; el plazo máximo es 100 años y el interés debe estar entre 0 % y 100 %.");
       return false;
     }
     setError("");
@@ -69,8 +83,7 @@ export default function CalculadoraHipotecaria() {
             inputStyle={styles.inputStyle}
             onChangeText={(text) => setCapital(text)}
             value={capital}
-            placeholder="Ej: 200000"
-            autoFocus={true}
+            placeholder="Ej: 200.000"
           />
         </View>
 
@@ -81,7 +94,7 @@ export default function CalculadoraHipotecaria() {
             inputStyle={styles.inputStyle}
             onChangeText={(text) => setPlazo(text)}
             value={plazo}
-            placeholder="Ej: 30"
+            placeholder="Ej: 25"
           />
         </View>
 
@@ -92,7 +105,7 @@ export default function CalculadoraHipotecaria() {
             inputStyle={styles.inputStyle}
             onChangeText={(text) => setInteres(text)}
             value={interes}
-            placeholder="Ej: 2.5"
+            placeholder="Ej: 2,5"
           />
         </View>
 
@@ -118,7 +131,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
   },
   inputContainer: {
     marginBottom: 20,
@@ -130,10 +143,10 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     fontSize: 18,
-    color: "olive",
+    color: "#102A43",
   },
   touchableButton: {
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
@@ -141,7 +154,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     fontWeight: "bold",
   },
   errorText: {

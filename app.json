@@ -12,18 +12,23 @@
       "backgroundColor": "#ffffff",
       "accessibilityLabel": "Cargando aplicación"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/Icono.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["com.google.android.gms.permission.AD_ID"],
+      "permissions": [
+        "com.google.android.gms.permission.AD_ID"
+      ],
       "package": "com.sigleto.Herramientas_financieras",
-      "versionCode": 27
+      "versionCode": 28
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,7 +44,17 @@
         {
           "androidAppId": "ca-app-pub-6921150380725872~3264410205"
         }
-      ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36
+          }
+        }
+      ],
+      "expo-font"
     ]
   }
 }

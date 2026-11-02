@@ -10,10 +10,10 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "./Publicidad";
 import Anuncio from "./Anuncio";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
   },
 
   input: {
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
 
   touchableButton: {
     marginVertical: 20,
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 27,
     marginTop: 40,
     borderRadius: 10,
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontSize: 24,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     textAlign: "center",
     fontWeight: "bold",
   },
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   },
   touchableButtonV: {
     marginVertical: 10,
-    backgroundColor: "olive",
+    backgroundColor: "#102A43",
     paddingHorizontal: 5,
     marginTop: 25,
     borderRadius: 10,

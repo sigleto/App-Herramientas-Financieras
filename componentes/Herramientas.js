@@ -10,10 +10,10 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "./Anexos/Publicidad";
 
 const Herramientas = () => {
   const navigation = useNavigation();

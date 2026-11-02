@@ -8,11 +8,15 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "./Publicidad";
 import Anuncio from "./Anuncio";
+import {
+  calculateMortgagePayment,
+  parseFinancialNumber,
+} from "../finanzas";
 
 export default function ResultadoCarencia({ route }) {
   const navigation = useNavigation();
@@ -30,10 +34,11 @@ export default function ResultadoCarencia({ route }) {
   }, []);
 
   const calcularResultados = () => {
-    const capitalInicial = parseFloat(capital);
-    const plazoTotalMeses = parseInt(plazo) * 12;
-    const periodoCarenciaMeses = parseInt(carencia) * 12;
-    const tasaInteresMensual = parseFloat(interes) / 100 / 12;
+    const capitalInicial = parseFinancialNumber(capital);
+    const plazoTotalMeses = parseFinancialNumber(plazo) * 12;
+    const periodoCarenciaMeses = parseFinancialNumber(carencia) * 12;
+    const tasaAnual = parseFinancialNumber(interes);
+    const tasaInteresMensual = tasaAnual / 100 / 12;
 
     // Cuota durante el período de carencia (solo intereses)
     const cuotaIntereses = capitalInicial * tasaInteresMensual;
@@ -42,11 +47,11 @@ export default function ResultadoCarencia({ route }) {
     const plazoRestanteMeses = plazoTotalMeses - periodoCarenciaMeses;
 
     // Cuota normal después del período de carencia
-    const cuotaNormal =
-      (capitalInicial *
-        tasaInteresMensual *
-        Math.pow(1 + tasaInteresMensual, plazoRestanteMeses)) /
-      (Math.pow(1 + tasaInteresMensual, plazoRestanteMeses) - 1);
+    const cuotaNormal = calculateMortgagePayment(
+      capitalInicial,
+      tasaAnual,
+      plazoRestanteMeses / 12
+    );
 
     setCuotaCarencia(cuotaIntereses.toFixed(2));
     setCuotaNormal(cuotaNormal.toFixed(2));
@@ -68,8 +73,8 @@ export default function ResultadoCarencia({ route }) {
       } else {
         // Período normal (amortización + intereses)
         const interesMensual = saldo * tasaInteresMensual;
-        const capitalMensual = cuotaNormal - interesMensual;
-        saldo -= capitalMensual;
+        const capitalMensual = Math.min(saldo, cuotaNormal - interesMensual);
+        saldo = Math.max(0, saldo - capitalMensual);
         amortizacionArray.push({
           periodo: i + 1,
           cuota: cuotaNormal.toFixed(2),
@@ -127,7 +132,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 30,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
   },
   title: {
     fontSize: 24,
@@ -143,7 +148,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   touchableButton: {
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 10,
@@ -154,19 +159,19 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     fontWeight: "bold",
   },
   buttonTextA: {
     fontSize: 18,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     textAlign: "center",
     fontWeight: "bold",
   },
 
   touchableButtonV: {
     marginVertical: 10,
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 5,
     marginTop: 15,
     borderRadius: 10,

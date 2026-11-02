@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: '#fffbde',
+    backgroundColor: '#F4F7FB',
   },
   label: {
     fontSize: 18,
@@ -157,13 +157,13 @@ const styles = StyleSheet.create({
   },
   touchableButton: {
     marginVertical: 10,
-    backgroundColor: '#555ff7',
+    backgroundColor: '#246BFD',
     paddingHorizontal: 27,
     marginTop: 20,
   },
   buttonText: {
     fontSize: 22,
-    color: '#f4f8f8'
+    color: '#FFFFFF'
   },
   resultContainer: {
     marginTop: 20,

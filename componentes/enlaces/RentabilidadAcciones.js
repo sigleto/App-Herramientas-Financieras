@@ -1,180 +1,196 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import axios from 'axios';
-import Anuncio from '../Anexos/Anuncio';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const MARKETSTACK_API_ACCESS_KEY = process.env.MARKETSTACK_API_ACCESS_KEY;
-const EXCHANGE_RATE_API_KEY = process.env.EXCHANGE_RATE_API_KEY;
+const colors = {
+  navy: "#102A43",
+  blue: "#246BFD",
+  background: "#F4F7FB",
+  muted: "#6B7C93",
+  border: "#E1E8F0",
+  green: "#16865B",
+  red: "#B93845",
+};
 
-export default function RentabilidadAcciones() {
-  const [symbol, setSymbol] = useState('');
-  const [cantidad, setCantidad] = useState('');
-  const [precioCompra, setPrecioCompra] = useState('');
-  const [resultado, setResultado] = useState(null);
-  const [cotizacionActual, setCotizacionActual] = useState(null);
-  const [error, setError] = useState(null);
+function parseValue(value) {
+  const parsed = Number(String(value).trim().replace(/\s/g, "").replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : NaN;
+}
 
-  const calcularRentabilidad = async () => {
-    try {
-      // Obtener cotización en dólares
-      const response = await axios.get(
-        `http://api.marketstack.com/v1/tickers/${symbol}/eod/latest?access_key=${MARKETSTACK_API_ACCESS_KEY}&exchange=XMAD`
-      );
+function currency(value, code) {
+  return new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: code,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
 
-      if (response.data) {
-        const stockData = response.data;
-        const precioDolares = stockData.close;
-
-        // Obtener tasa de cambio USD a EUR
-        const exchangeResponse = await axios.get(
-          `https://open.er-api.com/v6/latest/USD?apikey=${EXCHANGE_RATE_API_KEY}`
-        );
-
-        const tasaCambio = exchangeResponse.data.rates.EUR;
-        const precioEuros = precioDolares * tasaCambio; // Conversión a euros
-
-        setCotizacionActual(precioEuros.toFixed(2));
-
-        const cantidadAccion = parseInt(cantidad);
-        const inversionTotal = cantidadAccion * parseFloat(precioCompra);
-        const valorActual = cantidadAccion * precioEuros;
-        const rentabilidad = valorActual - inversionTotal;
-
-        setResultado(rentabilidad.toFixed(2).toString());
-        setError(null);
-      } else {
-        setError('El símbolo de la acción no existe.');
-      }
-    } catch (error) {
-      console.error(
-        'Error en la solicitud de datos de la acción:',
-        error.response?.data || error.message
-      );
-      setError(
-        'Error al obtener datos de la acción: ' +
-          (error.response?.data?.error?.message || error.message)
-      );
-    }
-  };
-
-  const navigation = useNavigation();
-  const volver = () => {
-    navigation.navigate('Home');
-  };
-
+function Field({ label, value, onChangeText, placeholder }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Simulador de Rentabilidad de Acciones</Text>
-      <Anuncio />
-
+    <View style={styles.fieldGroup}>
+      <Text style={styles.label}>{label}</Text>
       <TextInput
+        accessibilityLabel={label}
         style={styles.input}
-        placeholder="Símbolo de la Acción (por ejemplo, AAPL)"
-        value={symbol}
-        onChangeText={(text) => setSymbol(text)}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor="#A0ADBB"
+        keyboardType="decimal-pad"
       />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Cantidad de Acciones"
-        keyboardType="numeric"
-        value={cantidad}
-        onChangeText={(text) => setCantidad(text)}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Precio de Compra por Acción"
-        keyboardType="numeric"
-        value={precioCompra}
-        onChangeText={(text) => setPrecioCompra(text)}
-      />
-
-      <TouchableOpacity style={styles.button} onPress={calcularRentabilidad}>
-        <Text style={styles.buttonText}>Calcular Rentabilidad</Text>
-      </TouchableOpacity>
-
-      {error && <Text style={styles.error}>{error}</Text>}
-
-      {resultado !== null && (
-        <Text style={styles.result}>La rentabilidad estimada es: {resultado} EUR</Text>
-      )}
-
-      {cotizacionActual !== null && (
-        <Text style={styles.result}>Cotización actual: {cotizacionActual} EUR</Text>
-      )}
-
-      <TouchableOpacity onPress={volver} style={styles.touchableButtonV}>
-        <Text style={styles.buttonTextV}>VOLVER</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
+export default function RentabilidadAcciones() {
+  const [symbol, setSymbol] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
+  const [currentPrice, setCurrentPrice] = useState("");
+  const [currencyCode, setCurrencyCode] = useState("EUR");
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState("");
 
+  const calculate = () => {
+    const shares = parseValue(quantity);
+    const purchase = parseValue(purchasePrice);
+    const current = parseValue(currentPrice);
+    if (
+      !Number.isFinite(shares) ||
+      !Number.isFinite(purchase) ||
+      !Number.isFinite(current) ||
+      shares <= 0 ||
+      purchase <= 0 ||
+      current <= 0
+    ) {
+      setError("Introduce una cantidad y precios mayores que cero.");
+      setResult(null);
+      return;
+    }
+
+    const invested = shares * purchase;
+    const currentValue = shares * current;
+    setResult({
+      invested,
+      currentValue,
+      profit: currentValue - invested,
+      percentage: ((currentValue - invested) / invested) * 100,
+      asOf: new Date().toLocaleDateString("es-ES"),
+    });
+    setError("");
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.screen}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.eyebrow}>ANÁLISIS DE INVERSIÓN</Text>
+        <Text style={styles.title}>Rentabilidad de acciones</Text>
+        <Text style={styles.subtitle}>Calcula la variación de valor con precios que tú proporcionas.</Text>
+
+        <View style={styles.notice}>
+          <MaterialCommunityIcons name="information-outline" size={19} color={colors.blue} />
+          <Text style={styles.noticeText}>
+            No se muestran cotizaciones en tiempo real. Introduce manualmente el precio actual consultado en tu mercado de referencia.
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          <Field label="Símbolo (opcional)" value={symbol} onChangeText={setSymbol} placeholder="Ej. SAN, AAPL" />
+          <Field label="Número de acciones" value={quantity} onChangeText={setQuantity} placeholder="Ej. 10" />
+          <Field label="Precio medio de compra" value={purchasePrice} onChangeText={setPurchasePrice} placeholder="Ej. 25,50" />
+          <Field label="Precio actual (introducción manual)" value={currentPrice} onChangeText={setCurrentPrice} placeholder="Ej. 28,10" />
+          <Text style={styles.label}>Divisa de ambos precios</Text>
+          <View style={styles.pickerWrap}>
+            <Picker
+              selectedValue={currencyCode}
+              onValueChange={(value) => setCurrencyCode(value)}
+              style={styles.picker}
+            >
+              <Picker.Item label="EUR · Euro" value="EUR" />
+              <Picker.Item label="USD · Dólar estadounidense" value="USD" />
+              <Picker.Item label="GBP · Libra esterlina" value="GBP" />
+            </Picker>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            onPress={calculate}
+            style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+          >
+            <MaterialCommunityIcons name="chart-line" size={19} color="#FFFFFF" />
+            <Text style={styles.buttonText}>Calcular rentabilidad</Text>
+          </Pressable>
+          {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+        </View>
+
+        {result ? (
+          <View style={styles.resultCard}>
+            <Text style={styles.resultEyebrow}>{symbol.trim() ? symbol.trim().toUpperCase() : "RESULTADO"}</Text>
+            <Text style={[styles.profit, result.profit < 0 && styles.loss]}>
+              {currency(result.profit, currencyCode)}
+            </Text>
+            <Text style={[styles.percentage, result.profit < 0 && styles.loss]}>
+              {result.percentage >= 0 ? "+" : ""}{result.percentage.toLocaleString("es-ES", { maximumFractionDigits: 2 })} %
+            </Text>
+            <View style={styles.divider} />
+            <View style={styles.resultLine}>
+              <Text style={styles.resultLabel}>Importe invertido</Text>
+              <Text style={styles.resultValue}>{currency(result.invested, currencyCode)}</Text>
+            </View>
+            <View style={styles.resultLine}>
+              <Text style={styles.resultLabel}>Valor actual</Text>
+              <Text style={styles.resultValue}>{currency(result.currentValue, currencyCode)}</Text>
+            </View>
+            <Text style={styles.dateText}>Cálculo realizado el {result.asOf}. Precio actual introducido manualmente.</Text>
+          </View>
+        ) : null}
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#f4f4f8', // Fondo claro
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  input: {
-    height: 50,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 15,
-    paddingHorizontal: 15,
-    width: '100%',
-    fontSize:24,
-    textAlign:"center",
-    backgroundColor:'#f1d84a'
-  },
-  button: {
-    backgroundColor: '#4a90e2', // Azul personalizado
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginTop: 20,
-    width: '100%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  result: {
-    marginTop: 20,
-    fontSize: 18,
-    color: '#4a90e2',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  error: {
-    marginTop: 20,
-    fontSize: 16,
-    color: 'red',
-    textAlign: 'center',
-  },
-  touchableButtonV: {
-    marginVertical: 10,
-    backgroundColor: '#555ff7',
-    paddingHorizontal: 27,
-    marginTop: 20,
-  },
-  buttonTextV: {
-    fontSize: 22,
-    color: '#f4f8f8',
-  },
+  screen: { flex: 1, backgroundColor: colors.background },
+  content: { padding: 20, paddingTop: 16, paddingBottom: 36 },
+  eyebrow: { color: colors.blue, fontSize: 11, fontWeight: "800", letterSpacing: 1.2 },
+  title: { color: colors.navy, fontSize: 25, fontWeight: "800", marginTop: 5 },
+  subtitle: { color: colors.muted, fontSize: 13, lineHeight: 19, marginTop: 6, marginBottom: 15 },
+  notice: { flexDirection: "row", alignItems: "flex-start", gap: 9, padding: 13, marginBottom: 14, borderRadius: 14, backgroundColor: "#EAF1FF" },
+  noticeText: { flex: 1, color: colors.navy, fontSize: 11, lineHeight: 16 },
+  card: { padding: 16, backgroundColor: "#FFFFFF", borderColor: colors.border, borderWidth: 1, borderRadius: 20 },
+  fieldGroup: { marginBottom: 13 },
+  label: { color: colors.navy, fontSize: 12, fontWeight: "700", marginBottom: 6 },
+  input: { height: 47, color: colors.navy, fontSize: 15, fontWeight: "600", paddingHorizontal: 12, borderWidth: 1, borderColor: colors.border, borderRadius: 12 },
+  pickerWrap: { overflow: "hidden", borderWidth: 1, borderColor: colors.border, borderRadius: 12, marginBottom: 12 },
+  picker: { height: 48, color: colors.navy },
+  button: { minHeight: 50, flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 8, backgroundColor: colors.blue, borderRadius: 14, marginTop: 4 },
+  buttonText: { color: "#FFFFFF", fontWeight: "800", fontSize: 14 },
+  pressed: { opacity: 0.72, transform: [{ scale: 0.99 }] },
+  error: { color: colors.red, fontSize: 12, marginTop: 10 },
+  resultCard: { padding: 18, marginTop: 15, backgroundColor: "#FFFFFF", borderColor: colors.border, borderWidth: 1, borderRadius: 19 },
+  resultEyebrow: { color: colors.blue, fontWeight: "800", fontSize: 10, letterSpacing: 1 },
+  profit: { color: colors.green, fontWeight: "800", fontSize: 28, marginTop: 6 },
+  percentage: { color: colors.green, fontSize: 15, fontWeight: "700", marginTop: 2 },
+  loss: { color: colors.red },
+  divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.border, marginVertical: 13 },
+  resultLine: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 7 },
+  resultLabel: { color: colors.muted, fontSize: 12 },
+  resultValue: { color: colors.navy, fontSize: 12, fontWeight: "700" },
+  dateText: { color: colors.muted, fontSize: 10, lineHeight: 15, marginTop: 11 },
 });

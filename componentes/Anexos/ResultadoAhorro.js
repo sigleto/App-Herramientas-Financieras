@@ -1,48 +1,70 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Share } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Share,
+  useWindowDimensions,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "./Publicidad";
 import Anuncio from "./Anuncio";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  calculateMonthlySavingsAtRate,
+  parseFinancialNumber,
+} from "../finanzas";
 
 export default function ResultadoAhorro({ route }) {
   const navigation = useNavigation();
+  const { width } = useWindowDimensions();
   const { meta, tasaInteres, periodo, tipoInteres, unidadPeriodo } =
     route.params;
   const [ahorroNecesario, setAhorroNecesario] = useState("");
+  const [chartBalances, setChartBalances] = useState([]);
+  const [calculationError, setCalculationError] = useState("");
   const adUnitId = __DEV__
     ? TestIds.ADAPTIVE_BANNER
     : "ca-app-pub-6921150380725872/2360831572";
   const calcularAhorroNecesario = () => {
-    const metaFloat = parseFloat(meta);
-    const tasaInteresFloat = parseFloat(tasaInteres) / 100; // Tasa de interés anual
-    const periodoFloat = parseFloat(periodo); // Periodo en años
-
-    const tasaInteresMensual =
-      tipoInteres === "anual"
-        ? Math.pow(1 + tasaInteresFloat, 1 / 12) - 1
-        : tasaInteresFloat;
-
-    const ahorroNecesarioCalculado =
-      metaFloat /
-      ((Math.pow(1 + tasaInteresMensual, periodoFloat * 12) - 1) /
-        tasaInteresMensual);
-
-    setAhorroNecesario(
-      isNaN(ahorroNecesarioCalculado)
-        ? "0"
-        : ahorroNecesarioCalculado.toFixed(2).toString()
-    );
+    try {
+      const metaFloat = parseFinancialNumber(meta);
+      const interest = parseFinancialNumber(tasaInteres);
+      const years = parseFinancialNumber(periodo);
+      const monthlyRate =
+        tipoInteres === "anual"
+          ? Math.pow(1 + interest / 100, 1 / 12) - 1
+          : interest / 100;
+      const contribution = calculateMonthlySavingsAtRate(
+        metaFloat,
+        monthlyRate,
+        Math.round(years * 12)
+      );
+      let balance = 0;
+      const balances = [];
+      const periods = Math.round(years * 12);
+      for (let month = 1; month <= periods; month += 1) {
+        balance = balance * (1 + monthlyRate) + contribution;
+        if (month % 12 === 0 || month === periods) balances.push(balance);
+      }
+      setAhorroNecesario(contribution.toFixed(2));
+      setChartBalances(balances);
+      setCalculationError("");
+    } catch (error) {
+      setAhorroNecesario("");
+      setCalculationError(error.message);
+    }
   };
 
   useEffect(() => {
     calcularAhorroNecesario();
-  }, [navigation]);
+  }, [meta, navigation, periodo, tasaInteres, tipoInteres]);
 
   const volver = () => {
     navigation.navigate("Home");
@@ -51,8 +73,8 @@ export default function ResultadoAhorro({ route }) {
   // Datos para el gráfico
   const intervaloEtiquetas = 5; // Mostrar una etiqueta para cada cinco períodos
 
-  const labels = Array.from({ length: parseFloat(periodo) }, (_, i) => {
-    if ((i + 1) % intervaloEtiquetas === 0 || i === parseFloat(periodo) - 1) {
+  const labels = Array.from({ length: chartBalances.length }, (_, i) => {
+    if ((i + 1) % intervaloEtiquetas === 0 || i === chartBalances.length - 1) {
       return (i + 1).toString();
     } else {
       return "";
@@ -63,10 +85,7 @@ export default function ResultadoAhorro({ route }) {
     labels: labels,
     datasets: [
       {
-        data: Array.from({ length: parseFloat(periodo) }, (_, i) => {
-          const ahorroCalculado = parseFloat(ahorroNecesario * 12) * (i + 1);
-          return parseFloat(ahorroCalculado.toFixed(2));
-        }),
+        data: chartBalances,
       },
     ],
   };
@@ -107,6 +126,9 @@ export default function ResultadoAhorro({ route }) {
         </Text>
       </Text>
       <Text style={styles.enunciado}>Resultado</Text>
+      {calculationError ? (
+        <Text style={styles.errorText}>{calculationError}</Text>
+      ) : null}
       <Text style={styles.labelText}>
         Ahorro necesario mensual:{" "}
         <Text style={styles.resultText}>
@@ -117,7 +139,7 @@ export default function ResultadoAhorro({ route }) {
         <View>
           <LineChart
             data={data}
-            width={350}
+            width={width - 40}
             height={220}
             yAxisLabel="Ahorro acumulado"
             chartConfig={{
@@ -163,7 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
   },
   resultText: {
     marginTop: 30,
@@ -193,9 +215,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 10,
   },
+  errorText: {
+    color: "#B93845",
+    fontSize: 13,
+    textAlign: "center",
+    marginBottom: 10,
+  },
   touchableButtonV: {
     marginVertical: 10,
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 20,
 
     borderRadius: 10,
@@ -203,7 +231,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 24,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     textAlign: "center",
     fontWeight: "bold",
   },

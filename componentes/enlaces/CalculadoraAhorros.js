@@ -1,20 +1,41 @@
 import React, { useState } from 'react';
 import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Input } from 'react-native-elements';
+import { Input } from "../Entrada";
 import { useNavigation } from '@react-navigation/native';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { BannerPublicidad as BannerAd } from '../Anexos/Publicidad';
 import { Picker} from '@react-native-picker/picker';
+import { parseFinancialNumber } from "../finanzas";
 
 export default function CalculadoraAhorros() {
-  const [meta, setMeta] = useState('');
-  const [tasaInteres, setTasaInteres] = useState('');
-  const [periodo, setPeriodo] = useState('');
+  const [meta, setMeta] = useState('20000');
+  const [tasaInteres, setTasaInteres] = useState('3');
+  const [periodo, setPeriodo] = useState('5');
   const [tipoInteres, setTipoInteres] = useState('anual');
   const navigation = useNavigation();
 
   const calcularCuota = () => {
     if (!meta || !tasaInteres || !periodo) {
       alert('Por favor, completa todos los campos.');
+      return;
+    }
+
+    const target = parseFinancialNumber(meta);
+    const rate = parseFinancialNumber(tasaInteres);
+    const years = parseFinancialNumber(periodo);
+    const maxRate = tipoInteres === "anual" ? 100 : 20;
+    if (
+      !Number.isFinite(target) ||
+      !Number.isFinite(rate) ||
+      !Number.isFinite(years) ||
+      target <= 0 ||
+      rate < 0 ||
+      rate > maxRate ||
+      years <= 0 ||
+      years > 100
+    ) {
+      alert(`La meta y el plazo deben ser positivos, el plazo máximo es 100 años y el interés debe estar entre 0 % y ${maxRate} %.`);
+      return;
     } else {
       navigation.navigate("ResultadoAhorro", {
         meta: meta,
@@ -38,10 +59,10 @@ export default function CalculadoraAhorros() {
     >
       <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container}>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Meta de ahorro</Text>
+          <Text style={styles.label}>Meta de ahorro (€)</Text>
           <Input
             keyboardType="numeric"
-            inputStyle={{ fontSize: 20, color: 'olive' }}
+            inputStyle={{ fontSize: 20, color: '#102A43' }}
             style={styles.input}
             onChangeText={(text) => setMeta(text)}
             autoFocus={true}
@@ -54,7 +75,7 @@ export default function CalculadoraAhorros() {
             <Input
               keyboardType="numeric"
               style={styles.input}
-              inputStyle={{ fontSize: 20, color: 'olive' }}
+              inputStyle={{ fontSize: 20, color: '#102A43' }}
               value={tasaInteres}
               onChangeText={(text) => setTasaInteres(text)}
             />
@@ -78,7 +99,7 @@ export default function CalculadoraAhorros() {
           <Input
             keyboardType="numeric"
             style={styles.input}
-            inputStyle={{ fontSize: 20, color: 'olive' }}
+            inputStyle={{ fontSize: 20, color: '#102A43' }}
             value={periodo}
             onChangeText={(text) => setPeriodo(text)}
           />
@@ -101,7 +122,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: '#fffbde',
+    backgroundColor: '#F4F7FB',
    
   },
   rowContainer: {
@@ -120,13 +141,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     borderWidth: 2,
-    borderColor: "#555ff7",
+    borderColor: "#246BFD",
     borderRadius: 10,
     padding: 10,
   },
   touchableButton: {
     marginVertical: 10,
-    backgroundColor: '#555ff7',
+    backgroundColor: '#246BFD',
     paddingHorizontal: 110,
     marginTop: 5,
     width:'95%',
@@ -134,7 +155,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 23,
-    color: '#f4f8f8',
+    color: '#FFFFFF',
     textAlign:'center'
   },
   label: {
@@ -144,10 +165,10 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: '100%',
-    color: 'olive',
+    color: '#102A43',
     fontWeight: 'bold',
     borderWidth: 2,
-    borderColor: "#555ff7",
+    borderColor: "#246BFD",
     borderRadius: 10,
     padding: 10,
   },

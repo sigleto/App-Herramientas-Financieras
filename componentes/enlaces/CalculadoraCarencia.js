@@ -8,19 +8,20 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Input } from "react-native-elements";
+import { Input } from "../Entrada";
 import { useNavigation } from "@react-navigation/native";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "../Anexos/Publicidad";
+import { parseFinancialNumber } from "../finanzas";
 
 export default function CalculadoraCarencia() {
-  const [capital, setCapital] = useState("");
-  const [plazo, setPlazo] = useState("");
-  const [interes, setInteres] = useState("");
-  const [carencia, setCarencia] = useState("");
+  const [capital, setCapital] = useState("200000");
+  const [plazo, setPlazo] = useState("25");
+  const [interes, setInteres] = useState("3");
+  const [carencia, setCarencia] = useState("1");
   const navigation = useNavigation();
 
   const adUnitId = __DEV__
@@ -30,6 +31,27 @@ export default function CalculadoraCarencia() {
   const calcularCuotaConCarencia = () => {
     if (!capital || !plazo || !interes || !carencia) {
       alert("Por favor, complete todos los campos.");
+      return;
+    }
+
+    const principal = parseFinancialNumber(capital);
+    const years = parseFinancialNumber(plazo);
+    const rate = parseFinancialNumber(interes);
+    const graceYears = parseFinancialNumber(carencia);
+    if (
+      !Number.isFinite(principal) ||
+      !Number.isInteger(years) ||
+      !Number.isFinite(rate) ||
+      !Number.isInteger(graceYears) ||
+      principal <= 0 ||
+      years <= 0 ||
+      years > 100 ||
+      rate < 0 ||
+      rate > 100 ||
+      graceYears <= 0 ||
+      graceYears >= years
+    ) {
+      alert("El capital debe ser positivo, la carencia menor que el plazo, el plazo máximo 100 años y el interés entre 0 % y 100 %.");
       return;
     }
 
@@ -115,7 +137,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
   },
   title: {
     fontSize: 24,
@@ -134,10 +156,10 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     fontSize: 18,
-    color: "olive",
+    color: "#102A43",
   },
   touchableButton: {
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
@@ -145,7 +167,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     fontWeight: "bold",
   },
 });

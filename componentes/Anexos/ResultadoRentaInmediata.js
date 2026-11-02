@@ -9,29 +9,34 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  calculateMonthlyAnnuity,
+  parseFinancialNumber,
+} from "../finanzas";
 
 const ResultadosRentaInmediata = ({ route }) => {
   const { capital, tasaInteres, periodo } = route.params;
   const [rentaMensual, setRentaMensual] = useState(null);
+  const [error, setError] = useState("");
   const navigation = useNavigation();
 
   const calcularRentaMensual = () => {
-    const capitalFloat = parseFloat(capital || "0");
-    const tasaInteresFloat = parseFloat(tasaInteres || "0") / 100;
-    const periodoFloat = parseFloat(periodo || "0");
-
-    // Fórmula de renta inmediata mensual
-    const rentaMensualCalculada =
-      (capitalFloat * tasaInteresFloat) /
-      (1 - Math.pow(1 + tasaInteresFloat, -periodoFloat));
-
-    return isNaN(rentaMensualCalculada) ? 0 : rentaMensualCalculada;
+    return calculateMonthlyAnnuity(
+      parseFinancialNumber(capital),
+      parseFinancialNumber(tasaInteres),
+      parseFinancialNumber(periodo)
+    );
   };
 
   useEffect(() => {
     if (capital && tasaInteres && periodo) {
-      const renta = calcularRentaMensual();
-      setRentaMensual(renta);
+      try {
+        setRentaMensual(calcularRentaMensual());
+        setError("");
+      } catch (calculationError) {
+        setRentaMensual(null);
+        setError(calculationError.message);
+      }
     }
   }, [capital, tasaInteres, periodo]);
 
@@ -73,6 +78,7 @@ const ResultadosRentaInmediata = ({ route }) => {
       </Text>
 
       <Text style={styles.enunciadoR}>Resultado</Text>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <Text style={styles.labelText}>
         Renta Mensual:{" "}
         <Text style={styles.resultText}>{rentaMensual?.toFixed(2)}</Text>
@@ -91,7 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
   },
 
   input: {
@@ -103,7 +109,7 @@ const styles = StyleSheet.create({
 
   touchableButton: {
     marginVertical: 20,
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 27,
     marginTop: 40,
     borderRadius: 10,
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontSize: 24,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     textAlign: "center",
     fontWeight: "bold",
   },
@@ -158,7 +164,7 @@ const styles = StyleSheet.create({
 
   touchableButtonV: {
     marginVertical: 10,
-    backgroundColor: "olive",
+    backgroundColor: "#102A43",
     paddingHorizontal: 5,
     marginTop: 25,
     borderRadius: 10,

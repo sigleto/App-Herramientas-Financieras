@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Share } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "./Publicidad";
 import Anuncio from "./Anuncio";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  calculateMortgagePayment,
+  parseFinancialNumber,
+} from "../finanzas";
 
 export default function ResultadosPrestamo({ route }) {
   const navigation = useNavigation();
@@ -20,13 +24,14 @@ export default function ResultadosPrestamo({ route }) {
     : "ca-app-pub-6921150380725872/2360831572";
 
   const calculandoFunc = () => {
-    const capitalFloat = parseFloat(capital);
-    const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12;
-    const periodoFloat = parseFloat(periodo);
-
-    const cuotaCalculada =
-      (capitalFloat * tasaInteresFloat) /
-      (1 - Math.pow(1 + tasaInteresFloat, -periodoFloat));
+    const capitalFloat = parseFinancialNumber(capital);
+    const periodoFloat = parseFinancialNumber(periodo);
+    const tasa = parseFinancialNumber(tasaInteres);
+    const cuotaCalculada = calculateMortgagePayment(
+      capitalFloat,
+      tasa,
+      periodoFloat / 12
+    );
 
     setCuota(cuotaCalculada.toFixed(2).toString());
 
@@ -53,21 +58,22 @@ export default function ResultadosPrestamo({ route }) {
 
   const AccesoTabla = () => {
     const data = [];
-    const capitalFloat = parseFloat(capital);
-    const tasaInteresFloat = parseFloat(tasaInteres) / 100 / 12;
-    const periodoFloat = parseFloat(periodo);
+    const capitalFloat = parseFinancialNumber(capital);
+    const tasaInteresFloat = parseFinancialNumber(tasaInteres) / 100 / 12;
+    const periodoFloat = parseFinancialNumber(periodo);
+    const cuotaCalculada = calculateMortgagePayment(
+      capitalFloat,
+      tasaInteresFloat * 12 * 100,
+      periodoFloat / 12
+    );
 
     let saldoPendiente = capitalFloat;
     let totalInteresesPagados = 0;
     let totalPagado = 0;
 
     for (let i = 1; i <= periodoFloat; i++) {
-      const cuotaCalculada =
-        (capitalFloat * tasaInteresFloat) /
-        (1 - Math.pow(1 + tasaInteresFloat, -periodoFloat));
-
       const interes = saldoPendiente * tasaInteresFloat;
-      const amortizacion = cuotaCalculada - interes;
+      const amortizacion = Math.min(saldoPendiente, cuotaCalculada - interes);
 
       totalInteresesPagados += interes;
       totalPagado += cuotaCalculada;
@@ -80,7 +86,7 @@ export default function ResultadosPrestamo({ route }) {
         saldoPendiente: saldoPendiente.toFixed(2),
       });
 
-      saldoPendiente -= amortizacion;
+      saldoPendiente = Math.max(0, saldoPendiente - amortizacion);
     }
 
     setTotalIntereses(totalInteresesPagados.toFixed(2));
@@ -98,7 +104,7 @@ export default function ResultadosPrestamo({ route }) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [capital, navigation, periodo, tasaInteres]);
 
   const volver = () => {
     navigation.navigate("Home");
@@ -160,7 +166,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
     marginTop: 50,
   },
   headerContainer: {
@@ -180,14 +186,14 @@ const styles = StyleSheet.create({
   },
   touchableButton: {
     marginVertical: 20,
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 27,
     marginTop: 40,
     borderRadius: 10,
   },
   touchableButtonV: {
     marginVertical: 10,
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingHorizontal: 5,
     marginTop: 15,
     borderRadius: 10,
@@ -196,13 +202,13 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 24,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     textAlign: "center",
     fontWeight: "bold",
   },
   buttonTextA: {
     fontSize: 18,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     textAlign: "center",
     fontWeight: "bold",
   },

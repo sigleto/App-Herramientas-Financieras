@@ -8,19 +8,20 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Input } from "react-native-elements";
+import { Input } from "../Entrada";
 import { useNavigation } from "@react-navigation/native";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "../Anexos/Publicidad";
+import { parseFinancialNumber } from "../finanzas";
 
 export default function CalculadoraAmortAnticipada() {
-  const [capitalPendiente, setCapitalPendiente] = useState("");
-  const [plazoRestante, setPlazoRestante] = useState("");
-  const [interes, setInteres] = useState("");
-  const [amortizacionAnticipada, setAmortizacionAnticipada] = useState("");
+  const [capitalPendiente, setCapitalPendiente] = useState("150000");
+  const [plazoRestante, setPlazoRestante] = useState("240");
+  const [interes, setInteres] = useState("3");
+  const [amortizacionAnticipada, setAmortizacionAnticipada] = useState("10000");
   const navigation = useNavigation();
 
   const adUnitId = __DEV__
@@ -35,6 +36,27 @@ export default function CalculadoraAmortAnticipada() {
       !amortizacionAnticipada
     ) {
       alert("Por favor, complete todos los campos.");
+      return;
+    }
+
+    const balance = parseFinancialNumber(capitalPendiente);
+    const months = parseFinancialNumber(plazoRestante);
+    const rate = parseFinancialNumber(interes);
+    const extraPayment = parseFinancialNumber(amortizacionAnticipada);
+    if (
+      !Number.isFinite(balance) ||
+      !Number.isInteger(months) ||
+      !Number.isFinite(rate) ||
+      !Number.isFinite(extraPayment) ||
+      balance <= 0 ||
+      months <= 0 ||
+      months > 1200 ||
+      rate < 0 ||
+      rate > 100 ||
+      extraPayment <= 0 ||
+      extraPayment >= balance
+    ) {
+      alert("El capital y la amortización deben ser positivos; la amortización debe ser menor que el capital, el plazo entre 1 y 1200 meses y el interés entre 0 % y 100 %.");
       return;
     }
 
@@ -118,7 +140,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fffbde",
+    backgroundColor: "#F4F7FB",
   },
   title: {
     fontSize: 24,
@@ -137,10 +159,10 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     fontSize: 18,
-    color: "olive",
+    color: "#102A43",
   },
   touchableButton: {
-    backgroundColor: "#555ff7",
+    backgroundColor: "#246BFD",
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
@@ -148,7 +170,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    color: "#f4f8f8",
+    color: "#FFFFFF",
     fontWeight: "bold",
   },
 });

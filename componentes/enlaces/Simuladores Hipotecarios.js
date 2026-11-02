@@ -8,10 +8,10 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
-  BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import { BannerPublicidad as BannerAd } from "../Anexos/Publicidad";
 
 export default function SimuladoresHipotecarios() {
   const navigation = useNavigation();
